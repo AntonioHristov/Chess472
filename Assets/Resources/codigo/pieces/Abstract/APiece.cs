@@ -18,13 +18,12 @@ public abstract class APiece : MonoBehaviour
     #region Properties
     public ASquare when_die { get; set; }
     public ASquare square { get; set; }
-    public bool is_white { get; set; }
-    public int id_piece { get; set; } // = ID_PAWN; etc
+    public abstract bool is_white { get; set; }
+    public abstract int id_piece { get; set; } // = ID_PAWN; etc
     public bool is_alive { get; set; }
 
 
     public bool moved { get; set; }
-    public bool is_en_passant_target { get; set; }
     public Board board { get; set; }
     #endregion
 
@@ -46,6 +45,25 @@ public abstract class APiece : MonoBehaviour
     protected static bool Check_id_is_for_queen(int id = ID_NO_EXIST)
     { return Check_2_ids_are_the_same(id, ID_QUEEN); }
 
+    protected bool Check_id_no_exist()
+    { return Check_2_ids_are_the_same(this.id_piece, ID_NO_EXIST); }
+    protected bool Check_id_is_for_pawn()
+    { return Check_2_ids_are_the_same(this.id_piece, ID_PAWN); }
+    protected bool Check_id_is_for_knight()
+    { return Check_2_ids_are_the_same(this.id_piece, ID_KNIGHT); }
+    protected bool Check_id_is_for_bishop()
+    { return Check_2_ids_are_the_same(this.id_piece, ID_BISHOP); }
+    protected bool Check_id_is_for_king()
+    { return Check_2_ids_are_the_same(this.id_piece, ID_KING); }
+    protected bool Check_id_is_for_rook()
+    { return Check_2_ids_are_the_same(this.id_piece, ID_ROOK); }
+    protected bool Check_id_is_for_queen()
+    { return Check_2_ids_are_the_same(this.id_piece, ID_QUEEN); }
+
+
+
+
+
     public abstract List<ASquare> Squares_which_this_piece_see();
     public abstract List<ASquare> Posible_moves();
     public void Die()
@@ -59,6 +77,5 @@ public abstract class APiece : MonoBehaviour
         board = this.GetComponentInParent<Board>();
         this.is_alive = false;
         this.moved = false;
-        this.is_en_passant_target = false;
     }
 }

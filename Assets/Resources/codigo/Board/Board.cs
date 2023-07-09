@@ -15,7 +15,7 @@ public class Board : MonoBehaviour
         {
             if (this.transform.position.y < 0)
             {
-                this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 64, this.transform.position.z);
+                //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 64, this.transform.position.z);
             }
             this.transform.eulerAngles = new Vector3(0, 0, 0);
         }
@@ -23,7 +23,7 @@ public class Board : MonoBehaviour
         {
             if (this.transform.position.y > 0)
             {
-                this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y - 64, this.transform.position.z);
+                //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y - 64, this.transform.position.z);
             }
             this.transform.eulerAngles = new Vector3(0, 0, 180);
         }
@@ -85,25 +85,6 @@ public class Board : MonoBehaviour
         if (piece != null && square != null && square.piece != null && square.piece.is_white != piece.is_white)
         {
             list.Add(square);
-        }
-        return list;
-    }
-
-    public List<ASquare> Add_to_list_if_en_passant(List<ASquare> list, APiece piece)
-    {
-        if ( piece != null && piece.square != null )
-        {
-            var posible_squares_piece = new List<ASquare>();
-            posible_squares_piece.Add(this.squares.Left(piece.square, 1));
-            posible_squares_piece.Add(this.squares.Right(piece.square, 1));
-
-            foreach (ASquare square_target_piece in posible_squares_piece)
-            {
-                if (square_target_piece != null && square_target_piece.piece != null && square_target_piece.piece.is_en_passant_target )
-                {
-                    list.Add( this.squares.Up(square_target_piece, 1) );
-                }
-            }
         }
         return list;
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class confirmar_coronar_caja : MonoBehaviour
+public class Box_confirm_promotion : MonoBehaviour
 {
 
 

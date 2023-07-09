@@ -16,7 +16,7 @@ public class Squares : MonoBehaviour
 
     public ASquare Get_square_in_game(int letter, int number)
     {
-        if (this.in_game.GetLength(0) > letter && this.in_game.GetLength(1) > number)
+        if ( this.in_game.GetLength(0) > letter && this.in_game.GetLength(1) > number && letter >= 0 && number >= 0 )
         {
             return this.in_game[letter, number];
         }

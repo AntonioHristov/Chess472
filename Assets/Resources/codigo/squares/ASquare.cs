@@ -103,15 +103,25 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         else
         if( this.is_enabled && squares.clicked && squares.clicked.piece)
         {
-
-            
             var piece_clicked = squares.clicked.piece;
 
             this.squares.Disable(squares.clicked.piece.Posible_moves().ToArray());
             this.squares.Unclick(squares.clicked);
 
+            foreach (APiece piece in this.squares.board.pieces.GetComponentsInChildren<APawn>())
+            {
+                piece.GetComponent<APawn>().is_en_passant_target = false;
+            }
+
+            if (piece_clicked.GetComponent<APawn>() && piece_clicked.GetComponent<APawn>().direction.Forward(piece_clicked.square, 2) == this)
+            {
+                piece_clicked.GetComponent<APawn>().is_en_passant_target = true;
+            }
+
             piece_clicked.moved = true;
+
             squares.board.Piece_to_square(piece_clicked, this);
+            this.squares.board.game.Next_turn();
         }
 
 

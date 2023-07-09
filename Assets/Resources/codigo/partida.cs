@@ -12,9 +12,9 @@ public class partida : MonoBehaviour
 
     public piezas las_piezas;
     public casillas las_casillas;
-    public coronar_caja la_caja_corona;
-    public confirmar_coronar_caja la_caja_confirmar_corona;
-    public caja_de_texto_leer leeme;
+    public Box_promote la_caja_corona;
+    public Box_confirm_promotion la_caja_confirmar_corona;
+    public Box_read leeme;
     public propiedades_pieza rey_blanco;
     public propiedades_pieza rey_negro;
     public bool turno_blancas = true;

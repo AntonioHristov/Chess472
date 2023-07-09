@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class coronar_caja : MonoBehaviour
+public class Box_promote : MonoBehaviour
 {
 
     public piezas las_piezas;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class caja_de_texto_si_o_no : MonoBehaviour
+public class Box_yes_no : MonoBehaviour
 {
-    public GameObject obj_caja_de_texto_si_o_no;
+    public GameObject obj_box_yes_no;
     public Text txt_titulo;
     public Text txt_contenido;
     public Text txt_btn_si;
@@ -38,7 +38,7 @@ public class caja_de_texto_si_o_no : MonoBehaviour
         txt_btn_no.text = btn_no;
         mostrando_caja_de_texto = true;
         Time.timeScale = 0;
-        obj_caja_de_texto_si_o_no.SetActive(true);
+        obj_box_yes_no.SetActive(true);
 
       
     }
@@ -47,7 +47,7 @@ public class caja_de_texto_si_o_no : MonoBehaviour
     {
         mostrando_caja_de_texto = false;
         Time.timeScale = 1;
-        obj_caja_de_texto_si_o_no.SetActive(false);
+        obj_box_yes_no.SetActive(false);
     }
 
 }

@@ -85,6 +85,54 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
 
 
 
+    public ASquare Up(int number)
+    {
+        return this.squares.Up(this,number);
+    }
+
+    public ASquare Down(int number)
+    {
+        return this.squares.Down(this, number);
+    }
+
+    public ASquare Left(int number)
+    {
+        return this.squares.Left(this, number);
+    }
+
+    public ASquare Right(int number)
+    {
+        return this.squares.Right(this, number);
+    }
+
+    public ASquare Up_left(ASquare square, int number_up, int number_left)
+    {
+        return this.squares.Up_left(this, number_up, number_left);
+    }
+
+    public ASquare Up_right(ASquare square, int number_up, int number_right)
+    {
+        return this.squares.Up_right(this, number_up, number_right);
+    }
+
+    public ASquare Down_left(ASquare square, int number_down, int number_left)
+    {
+        return this.squares.Down_left(this, number_down, number_left);
+    }
+
+    public ASquare Down_right(ASquare square, int number_down, int number_right)
+    {
+        return this.squares.Down_right(this, number_down, number_right);
+    }
+
+
+
+
+
+
+
+
+
     public void OnPointerDown(PointerEventData eventData)
     {
         this.Awake();
@@ -108,15 +156,21 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
             this.squares.Disable(squares.clicked.piece.Posible_moves().ToArray());
             this.squares.Unclick(squares.clicked);
 
-            foreach (APiece piece in this.squares.board.pieces.GetComponentsInChildren<APawn>())
+            // Trying to capture the target piece en passant , if its not been able to do it, then...
+            if ( !(piece_clicked.GetComponent<APawn>() && piece_clicked.GetComponent<APawn>().Try_capture_en_passant(this)) )
             {
-                piece.GetComponent<APawn>().is_en_passant_target = false;
+                // All pawns in game are not en passant target. This is because we want a pawn which is an en passant target only the first chance and not more
+                this.squares.board.pieces.Set_no_targets_en_passant_in_game();
+
+                // if pawn's first move and go 2 squares, is a target for en passant, if not not.
+                piece_clicked.GetComponent<APawn>().Is_en_passant_target(this);
             }
 
-            if (piece_clicked.GetComponent<APawn>() && piece_clicked.GetComponent<APawn>().direction.Forward(piece_clicked.square, 2) == this)
-            {
-                piece_clicked.GetComponent<APawn>().is_en_passant_target = true;
-            }
+
+
+
+
+
 
             piece_clicked.moved = true;
 

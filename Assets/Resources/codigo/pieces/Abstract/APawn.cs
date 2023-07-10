@@ -108,4 +108,44 @@ public abstract class APawn : APiece
         }
         return list;
     }
+
+    /// <summary>
+    /// Try to capture the target pawn en passant, and return if can do it or not
+    /// </summary>
+    /// <param name="square_destination">Square which this pawn will be after capture en passant</param>
+    /// <returns></returns>
+    public bool Try_capture_en_passant(ASquare square_destination)
+    {
+        // if move chosen is en passant, capture the pawn target
+        if
+            (
+            square_destination && this.direction &&
+            this.direction.Forward(square_destination, -1) &&
+            this.direction.Forward(square_destination, -1).piece &&
+            this.direction.Forward(square_destination, -1).piece.GetComponent<APawn>() &&
+            this.direction.Forward(square_destination, -1).piece.GetComponent<APawn>().is_en_passant_target
+            )
+        {
+            this.direction.Forward(square_destination, -1).piece.Die();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool Is_en_passant_target(ASquare square_destination)
+    {
+        // if pawn's first move and go 2 squares, is a target for en passant
+        if ( square_destination && !this.moved && this.direction.Forward(this.square, 2) == square_destination)
+        {
+            this.is_en_passant_target = true;
+        }
+        else
+        {
+            this.is_en_passant_target = false;
+        }
+        return this.is_en_passant_target;
+    }
 }

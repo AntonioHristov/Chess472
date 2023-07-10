@@ -62,24 +62,24 @@ public class Squares : MonoBehaviour
         return this.Get_square_in_game(square.id_letter + number, square.id_number);
     }
 
-    public ASquare Up_left(ASquare square, int up, int left)
+    public ASquare Up_left(ASquare square, int number_up, int number_left)
     {
-        return this.Get_square_in_game(square.id_letter - left, square.id_number + up);
+        return this.Get_square_in_game(square.id_letter - number_left, square.id_number + number_up);
     }
 
-    public ASquare Up_right(ASquare square, int up, int right)
+    public ASquare Up_right(ASquare square, int number_up, int number_right)
     {
-        return this.Get_square_in_game(square.id_letter + right, square.id_number + up);
+        return this.Get_square_in_game(square.id_letter + number_right, square.id_number + number_up);
     }
 
-    public ASquare Down_left(ASquare square, int down, int left)
+    public ASquare Down_left(ASquare square, int number_down, int number_left)
     {
-        return this.Get_square_in_game(square.id_letter - left, square.id_number - down);
+        return this.Get_square_in_game(square.id_letter - number_left, square.id_number - number_down);
     }
 
-    public ASquare Down_right(ASquare square, int down, int right)
+    public ASquare Down_right(ASquare square, int number_down, int number_right)
     {
-        return this.Get_square_in_game(square.id_letter + right, square.id_number - down);
+        return this.Get_square_in_game(square.id_letter + number_right, square.id_number - number_down);
     }
 
 

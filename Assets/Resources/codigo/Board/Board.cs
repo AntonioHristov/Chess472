@@ -91,7 +91,7 @@ public class Board : MonoBehaviour
 
     public void Default_pieces_to_when_die()
     {
-        var pieces = this.pieces.all;
+        var pieces = this.pieces.in_game;
         var when_die = squares.when_die;
 
         for(var count = 0; count < pieces.Length; count++)
@@ -102,7 +102,7 @@ public class Board : MonoBehaviour
 
     public void Default_pieces_to_squares()
     {
-        var pieces = this.pieces.all;
+        var pieces = this.pieces.in_game;
         pieces[0].Revive(this.squares.Get_square_in_game (ASquare.ID_A, ASquare.ID_2));
         pieces[1].Revive(this.squares.Get_square_in_game (ASquare.ID_B, ASquare.ID_2));
         pieces[2].Revive(this.squares.Get_square_in_game (ASquare.ID_C, ASquare.ID_2));

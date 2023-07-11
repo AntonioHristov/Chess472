@@ -10,14 +10,17 @@ public class Game : MonoBehaviour
     public Board board { get; set; }
     public Pieces pieces { get; set; }
     public Squares squares { get; set; }
-    public bool is_white_turn { get; set; }
+    public bool is_white_turn;
+    //public bool is_white_turn { get; set; }
     public bool is_finished { get; set; }
+
+
 
 
     public void Default_values()
     {
         is_finished = true;
-        Choose_turn(WHITE_TURN);
+        White_turn();
         board.Default_pieces_to_when_die();
         board.Default_pieces_to_squares();
 
@@ -27,13 +30,13 @@ public class Game : MonoBehaviour
     public void Next_turn()
     {
         this.is_white_turn = !this.is_white_turn;
-        this.GetComponentInChildren<Board>().Rotate(this.is_white_turn);
+        this.board.Rotate();
     }
 
-    public void Choose_turn(bool white_chosen = true)
+    public void White_turn()
     {
-        is_white_turn = white_chosen;
-        this.GetComponentInChildren<Board>().Rotate(white_chosen);
+        is_white_turn = true;
+        this.board.Rotate_default();
     }
 
     public void Check()

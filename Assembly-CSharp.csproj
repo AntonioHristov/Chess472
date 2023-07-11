@@ -66,6 +66,7 @@
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_read.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_write.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_yes_no.cs" />
+    <Compile Include="Assets\Resources\codigo\Common\Common.cs" />
     <Compile Include="Assets\Resources\codigo\Direction\ADirection.cs" />
     <Compile Include="Assets\Resources\codigo\Direction\Instances\Down.cs" />
     <Compile Include="Assets\Resources\codigo\Direction\Instances\Left.cs" />

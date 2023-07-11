@@ -5,13 +5,56 @@ using UnityEngine.UI;
 
 public class Pieces : MonoBehaviour
 {
-    public APiece[] in_game = new APiece[0];
+    private APiece[] in_game = new APiece[0];
 
     public Board board { get; set; }
+
 
     #region Methods
 
     #region APiece
+    public void Rotate(APiece[] pieces_list)
+    {
+        if (pieces_list != null)
+        {
+            foreach (APiece piece in pieces_list)
+            {
+                Common.Rotate_z(piece.gameObject);
+            }
+        }
+    }
+
+    public void Rotate_in_game()
+    {
+        this.Rotate(this.in_game);
+    }
+
+    public void Rotate_default(APiece[] pieces_list)
+    {
+        if (pieces_list != null)
+        {
+            foreach (APiece piece in pieces_list)
+            {
+                piece.transform.eulerAngles = Vector3.zero;
+            }
+        }
+    }
+
+    public void Rotate_in_game_default()
+    {
+        Rotate_default(this.in_game);
+    }
+
+    public APiece[] Get_All_in_game()
+    {
+        return this.in_game;
+    }
+
+    public void Set_All_in_game(APiece[] pieces_list)
+    {
+        this.in_game = pieces_list;
+    }
+
     public APiece[] Get_alives(APiece[] pieces_list)
     {
         var result = new List<APiece>();

@@ -25,6 +25,11 @@ public abstract class APiece : MonoBehaviour
 
     public bool moved { get; set; }
     public Board board { get; set; }
+
+
+
+
+
     #endregion
 
     #region Methods
@@ -77,5 +82,6 @@ public abstract class APiece : MonoBehaviour
         board = this.GetComponentInParent<Board>();
         this.is_alive = false;
         this.moved = false;
+
     }
 }

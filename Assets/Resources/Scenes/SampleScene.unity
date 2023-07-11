@@ -1867,8 +1867,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1570465846}
-        m_MethodName: nueva_partida
+      - m_Target: {fileID: 1570465845}
+        m_MethodName: New_game
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -21441,6 +21441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f51c00e18ec70b94fb39dbcb3eece927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  is_white_turn: 0
 --- !u!114 &1570465846
 MonoBehaviour:
   m_ObjectHideFlags: 0

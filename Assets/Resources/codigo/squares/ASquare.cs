@@ -136,6 +136,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         this.Awake();
+        
 
         // if click square in a own piece
         if( this.piece != null && this.piece.is_white == squares.board.game.is_white_turn )

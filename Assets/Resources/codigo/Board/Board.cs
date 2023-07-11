@@ -9,24 +9,24 @@ public class Board : MonoBehaviour
     public Pieces pieces {get; set;}
     public Game game { get; set; }
 
-    public void Rotate(bool is_white_turn = true)
+    /// <summary>
+    /// Rotate or not depending on the turn of the game
+    /// This method rotate the board and all pieces in game
+    /// </summary>
+    public void Rotate()
     {
-        if (is_white_turn)
-        {
-            if (this.transform.position.y < 0)
-            {
-                //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 64, this.transform.position.z);
-            }
-            this.transform.eulerAngles = new Vector3(0, 0, 0);
-        }
-        else
-        {
-            if (this.transform.position.y > 0)
-            {
-                //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y - 64, this.transform.position.z);
-            }
-            this.transform.eulerAngles = new Vector3(0, 0, 180);
-        }
+        Common.Rotate_z(this.gameObject);
+        this.pieces.Rotate_in_game();
+    }
+
+    /// <summary>
+    /// Rotation by default
+    /// This method rotate the board and all pieces in game
+    /// </summary>
+    public void Rotate_default()
+    {
+        this.transform.eulerAngles = Vector3.zero;
+        this.pieces.Rotate_in_game_default();      
     }
 
 
@@ -91,7 +91,7 @@ public class Board : MonoBehaviour
 
     public void Default_pieces_to_when_die()
     {
-        var pieces = this.pieces.in_game;
+        var pieces = this.pieces.Get_All_in_game();
         var when_die = squares.when_die;
 
         for(var count = 0; count < pieces.Length; count++)
@@ -102,7 +102,7 @@ public class Board : MonoBehaviour
 
     public void Default_pieces_to_squares()
     {
-        var pieces = this.pieces.in_game;
+        var pieces = this.pieces.Get_All_in_game();
         pieces[0].Revive(this.squares.Get_square_in_game (ASquare.ID_A, ASquare.ID_2));
         pieces[1].Revive(this.squares.Get_square_in_game (ASquare.ID_B, ASquare.ID_2));
         pieces[2].Revive(this.squares.Get_square_in_game (ASquare.ID_C, ASquare.ID_2));
@@ -143,6 +143,7 @@ public class Board : MonoBehaviour
         squares = this.GetComponentInChildren<Squares>();
         pieces = this.GetComponentInChildren<Pieces>();
         game = this.GetComponentInParent<Game>();
+
     }
 
 

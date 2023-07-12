@@ -23,22 +23,24 @@ public class Box_promote : MonoBehaviour
 
     private void Awake()
     {
-
+        //this.Hide();
     }
 
         // Update is called once per frame
         void Update()
     {
+        /*
         if (!mostrando_caja_de_texto)
         {
-            ocultar_caja_de_texto_coronar();
+            Hide();
         }
+        */
     }
 
-    public void mostrar_caja_de_texto_coronar()
+    public void Show(APiece piece)
     {
         todas_las_piezas_activas();
-        if (las_piezas.coronado_es_blanca)
+        if (piece.is_white)
         {
             dama_negro.gameObject.SetActive(false);
             torre_negro.gameObject.SetActive(false);
@@ -52,14 +54,14 @@ public class Box_promote : MonoBehaviour
             alfil_blanco.gameObject.SetActive(false);
             caballo_blanco.gameObject.SetActive(false);
         }
-        mostrando_caja_de_texto = true;
+        this.mostrando_caja_de_texto = true;
         Time.timeScale = 0;
         this.gameObject.SetActive(true);
 
 
     }
 
-    public void ocultar_caja_de_texto_coronar()
+    public void Hide()
     {
         mostrando_caja_de_texto = false;
         Time.timeScale = 1;

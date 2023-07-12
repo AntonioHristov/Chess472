@@ -17,11 +17,15 @@ public class Game : MonoBehaviour
 
 
 
+
+
     public void Default_values()
     {
         is_finished = true;
         White_turn();
         board.Default_pieces_to_when_die();
+        board.pieces.Set_default_values_in_game();
+        board.squares.Set_default_values_in_game();
         board.Default_pieces_to_squares();
 
         is_finished = false;

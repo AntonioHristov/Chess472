@@ -91,12 +91,12 @@ public class Board : MonoBehaviour
 
     public void Default_pieces_to_when_die()
     {
-        var pieces = this.pieces.Get_All_in_game();
+        var all_pieces = this.pieces.Get_All_in_game();
         var when_die = squares.when_die;
 
-        for(var count = 0; count < pieces.Length; count++)
+        for(var count = 0; count < all_pieces.Length; count++)
         {
-            pieces[count].when_die = when_die[count];
+            all_pieces[count].when_die = when_die[count];
         } 
     }
 
@@ -136,6 +136,11 @@ public class Board : MonoBehaviour
         pieces[29].Revive(this.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_8));
         pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_8));
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_8));
+    }
+
+    public void Default_values_pieces()
+    {
+        this.pieces.Set_default_values_in_game();
     }
 
     void Awake()

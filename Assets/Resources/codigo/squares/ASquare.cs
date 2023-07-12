@@ -83,7 +83,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
 
 
 
-
+    #region Direction Change Square
 
     public ASquare Up(int number)
     {
@@ -125,8 +125,74 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         return this.squares.Down_right(this, number_down, number_right);
     }
 
+    #endregion
 
 
+    public void Click()
+    {
+        this.GetComponent<Image>().sprite = this.clicked_image;
+        this.clicked_by_user = true;
+        if (this.squares)
+        {
+            this.squares.clicked = this;
+        }
+    }
+
+    public void Unclick()
+    {
+        this.GetComponent<Image>().sprite = this.main_image;
+        this.clicked_by_user = false;
+        if(this.squares)
+        {
+            this.squares.clicked = null;
+        }
+    }
+
+    /// <summary>
+    /// Click or unclick by user
+    /// </summary>
+    public void Click_or_unclick()
+    {
+        if (this.squares.clicked == null && this.piece != null)
+        {
+            this.Click();
+        }
+        else if (this.squares.clicked == this)
+        {
+            this.Unclick();
+        }
+    }
+
+    public void Enable()
+    {
+        this.GetComponent<Image>().sprite = this.enabled_image;
+        this.is_enabled = true;
+    }
+
+    public void Disable()
+    {
+        this.GetComponent<Image>().sprite = this.main_image;
+        this.is_enabled = false;
+    }
+
+    public void Enable_or_disable()
+    {
+        if (this.is_enabled)
+        {
+            this.Disable();
+        }
+        else
+        {
+            this.Enable();
+        }
+    }
+
+
+    public void Default_values()
+    {
+        this.Disable();
+        this.Unclick();
+    }
 
 
 
@@ -141,7 +207,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         // if click square in a own piece
         if( this.piece != null && this.piece.is_white == squares.board.game.is_white_turn )
         {
-            this.squares.Click_or_unclick(this);
+            this.Click_or_unclick();
 
             if (this.squares.clicked == null || this.squares.clicked == this)
             {
@@ -155,25 +221,31 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
             var piece_clicked = squares.clicked.piece;
 
             this.squares.Disable(squares.clicked.piece.Posible_moves().ToArray());
-            this.squares.Unclick(squares.clicked);
+            this.squares.clicked.Unclick();
 
-            // Trying to capture the target piece en passant , if its not been able to do it, then...
-            if ( !(piece_clicked.GetComponent<APawn>() && piece_clicked.GetComponent<APawn>().Try_capture_en_passant(this)) )
+            if(piece_clicked.GetComponent<APawn>())
             {
-                // All pawns in game are not en passant target. This is because we want a pawn which is an en passant target only the first chance and not more
-                this.squares.board.pieces.Set_no_targets_en_passant_in_game();
+                // Trying to capture the target piece en passant , if its not been able to do it, then...
+                if (! piece_clicked.GetComponent<APawn>().Try_capture_en_passant(this) )
+                {
+                    // All pawns in game are not en passant target. This is because we want a pawn which is an en passant target only the first chance and not more
+                    this.squares.board.pieces.Set_no_targets_en_passant_in_game();
 
-                // if pawn's first move and go 2 squares, is a target for en passant, if not not.
-                piece_clicked.GetComponent<APawn>().Is_en_passant_target(this);
+                    // if pawn's first move and go 2 squares, is a target for en passant, if not not.
+                    piece_clicked.GetComponent<APawn>().Is_en_passant_target(this);
+
+
+                    if ( !piece_clicked.GetComponent<APawn>().direction.Forward(this, 5))
+                    {
+                        Debug.Log("open promotion box");
+                        piece_clicked.GetComponent<APawn>().Open_box_promotion();
+                    }
+                }
+
+                piece_clicked.GetComponent<APawn>().moved = true;
             }
 
 
-
-
-
-
-
-            piece_clicked.moved = true;
 
             squares.board.Piece_to_square(piece_clicked, this);
             this.squares.board.game.Next_turn();
@@ -186,12 +258,11 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
     public void Awake()
     {
         this.squares = this.GetComponentInParent<Squares>();
-        //this.squares.Disable(this);
     }
 
     public void Start()
     {
-        this.GetComponentInParent<Squares>().Disable(this);
+        this.Default_values();
     }
 }
 

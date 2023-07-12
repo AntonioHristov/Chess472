@@ -23,8 +23,8 @@ public abstract class APiece : MonoBehaviour
     public bool is_alive { get; set; }
 
 
-    public bool moved { get; set; }
-    public Board board { get; set; }
+
+    public Pieces pieces { get; set; }
 
 
 
@@ -79,9 +79,9 @@ public abstract class APiece : MonoBehaviour
 
     public void Awake()
     {
-        board = this.GetComponentInParent<Board>();
+        pieces = this.GetComponentInParent<Pieces>();
         this.is_alive = false;
-        this.moved = false;
+
 
     }
 }

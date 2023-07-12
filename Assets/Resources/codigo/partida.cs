@@ -261,13 +261,13 @@ public class partida : MonoBehaviour
     public void mostrar_caja_corona()
     {
         la_caja_confirmar_corona.ocultar_caja_de_texto_confirmar();
-        la_caja_corona.mostrar_caja_de_texto_coronar();
+        //la_caja_corona.Show();
     }
 
 
     public void mostrar_caja_confirma_corona(int tipo_pieza)
     {
-        la_caja_corona.ocultar_caja_de_texto_coronar();
+        la_caja_corona.Hide();
         la_caja_confirmar_corona.mostrar_caja_de_texto_confirmar(tipo_pieza);
     }
 

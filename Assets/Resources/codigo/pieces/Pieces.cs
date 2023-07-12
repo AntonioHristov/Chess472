@@ -13,6 +13,8 @@ public class Pieces : MonoBehaviour
     #region Methods
 
     #region APiece
+
+    #region Rotate
     public void Rotate(APiece[] pieces_list)
     {
         if (pieces_list != null)
@@ -44,6 +46,8 @@ public class Pieces : MonoBehaviour
     {
         Rotate_default(this.in_game);
     }
+
+    #endregion
 
     public APiece[] Get_All_in_game()
     {
@@ -213,6 +217,18 @@ public class Pieces : MonoBehaviour
     public APiece[] Set_blacks_in_game()
     {
         return this.Set_blacks(this.in_game);
+    }
+
+    public void Set_default_values(APiece[] pieces_list)
+    {
+        this.Set_default_values(this.Get_pawns(pieces_list));
+        //this.Set_default_values(this.Get_kings(pieces_list));
+        //this.Set_default_values(this.Get_rooks(pieces_list));
+    }
+
+    public void Set_default_values_in_game()
+    {
+        this.Set_default_values(this.in_game);
     }
 
     #endregion
@@ -397,6 +413,20 @@ public class Pieces : MonoBehaviour
     public APawn[] Set_no_moved_in_game()
     {
         return this.Set_no_moved(this.Get_pawns_in_game());
+    }
+
+    public APawn[] Set_default_values(APawn[] pawns_list)
+    {
+        var result = new List<APawn>();
+        if (pawns_list != null)
+        {
+            foreach (APawn pawn in pawns_list)
+            {
+                pawn.Default_values();
+                result.Add(pawn);
+            }
+        }
+        return result.ToArray();
     }
 
     #endregion

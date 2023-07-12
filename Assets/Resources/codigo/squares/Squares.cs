@@ -125,48 +125,36 @@ public class Squares : MonoBehaviour
 
 
 
-    public void Click(ASquare square)
-    {
-        square.GetComponent<Image>().sprite = square.clicked_image;
-        square.clicked_by_user = true;
-        this.clicked = square;
-    }
 
     public void Click(ASquare[] squares)
     {
         foreach (ASquare square in squares)
         {
-            this.Click(square);
+            square.Click();
         }
     }
 
-    public void Unclick(ASquare square)
+    public void Click(ASquare[,] squares)
     {
-        square.GetComponent<Image>().sprite = square.main_image;
-        square.clicked_by_user = false;
-        square.GetComponentInParent<Squares>().clicked = null;
+        foreach (ASquare square in squares)
+        {
+            square.Click();
+        }
     }
 
     public void Unclick(ASquare[] squares)
     {
         foreach (ASquare square in squares)
         {
-            this.Unclick(square);
+            square.Unclick();
         }
     }
 
-    /// <summary>
-    /// Click or unclick by user
-    /// </summary>
-    public void Click_or_unclick(ASquare square)
+    public void Unclick(ASquare[,] squares)
     {
-        if (this.clicked == null && square.piece != null)
+        foreach (ASquare square in squares)
         {
-            Click(square);
-        }
-        else if (this.clicked == square)
-        {
-            Unclick(square);
+            square.Unclick();
         }
     }
 
@@ -174,47 +162,47 @@ public class Squares : MonoBehaviour
     {
         foreach (ASquare square in squares)
         {
-            this.Click_or_unclick(square);
+            square.Click_or_unclick();
         }
     }
 
-    public void Enable(ASquare square)
+    public void Click_or_unclick(ASquare[,] squares)
     {
-        square.GetComponent<Image>().sprite = square.enabled_image;
-        square.is_enabled = true;
+        foreach (ASquare square in squares)
+        {
+            square.Click_or_unclick();
+        }
     }
 
     public void Enable(ASquare[] squares)
     {
         foreach (ASquare square in squares)
         {
-            this.Enable(square);
+            square.Enable();
         }
     }
 
-    public void Disable(ASquare square)
+    public void Enable(ASquare[,] squares)
     {
-        square.GetComponent<Image>().sprite = square.main_image;
-        square.is_enabled = false;
+        foreach (ASquare square in squares)
+        {
+            square.Enable();
+        }
     }
 
     public void Disable(ASquare[] squares)
     {
         foreach (ASquare square in squares)
         {
-            this.Disable(square);
+            square.Disable();
         }
     }
 
-    public void Enable_or_disable(ASquare square)
+    public void Disable(ASquare[,] squares)
     {
-        if (square.is_enabled)
+        foreach (ASquare square in squares)
         {
-            Disable(square);
-        }
-        else
-        {
-            Enable(square);
+            square.Disable();
         }
     }
 
@@ -222,8 +210,37 @@ public class Squares : MonoBehaviour
     {
         foreach (ASquare square in squares)
         {
-            this.Enable_or_disable(square);
+            square.Enable_or_disable();
         }
+    }
+
+    public void Enable_or_disable(ASquare[,] squares)
+    {
+        foreach (ASquare square in squares)
+        {
+            square.Enable_or_disable();
+        }
+    }
+
+    public void Set_default_values(ASquare[] squares)
+    {
+        foreach (ASquare square in squares)
+        {
+            square.Default_values();
+        }
+    }
+
+    public void Set_default_values(ASquare[,] squares)
+    {
+        foreach (ASquare square in this.in_game)
+        {
+            square.Default_values();
+        }
+    }
+
+    public void Set_default_values_in_game()
+    {
+        this.Set_default_values(this.in_game);
     }
 
 

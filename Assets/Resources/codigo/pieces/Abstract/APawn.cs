@@ -7,7 +7,8 @@ public abstract class APawn : APiece
     public abstract ADirection direction { get; set; }
     public override int id_piece { get; set; } // = ID_PAWN; etc
     public bool is_en_passant_target { get; set; }
-
+    public bool moved { get; set; }
+    public static Box_promote box_promote;
 
 
     new public void Awake()
@@ -16,9 +17,22 @@ public abstract class APawn : APiece
         //this.is_white = true;
         this.id_piece = ID_PAWN;
         this.is_en_passant_target = false;
+        this.moved = false;
+        
         //Image img = gameObject.AddComponent(typeof(Image)) as Image;
         //this.gameObject.GetComponent<Image>().sprite = Sprites.Get_white_pawn();
     }
+
+    public void Start()
+    {
+        if (!APawn.box_promote && this.pieces && this.pieces.board && this.pieces.board.game)
+        {
+            APawn.box_promote = this.pieces.board.game.GetComponentInChildren<Box_promote>();
+            APawn.box_promote.Hide();
+        }
+    }
+
+
 
     public override List<ASquare> Squares_which_this_piece_see()
     {
@@ -34,26 +48,26 @@ public abstract class APawn : APiece
 
         if (this.direction.Check_id_is_up())
         {
-            result.Add(board.squares.Up_left(this.square, 1, 1));
-            result.Add(board.squares.Up_right(this.square, 1, 1));
+            result.Add(this.pieces.board.squares.Up_left(this.square, 1, 1));
+            result.Add(this.pieces.board.squares.Up_right(this.square, 1, 1));
         }
         else
         if (this.direction.Check_id_is_down())
         {
-            result.Add(board.squares.Down_left(this.square, 1, 1));
-            result.Add(board.squares.Down_right(this.square, 1, 1));
+            result.Add(this.pieces.board.squares.Down_left(this.square, 1, 1));
+            result.Add(this.pieces.board.squares.Down_right(this.square, 1, 1));
         }
         else
         if (this.direction.Check_id_is_left())
         {
-            result.Add(board.squares.Up_left(this.square, 1, 1));
-            result.Add(board.squares.Down_left(this.square, 1, 1));
+            result.Add(this.pieces.board.squares.Up_left(this.square, 1, 1));
+            result.Add(this.pieces.board.squares.Down_left(this.square, 1, 1));
         }
         else
         //if (this.direction.Check_id_is_right())
         {
-            result.Add(board.squares.Up_right(this.square, 1, 1));
-            result.Add(board.squares.Down_right(this.square, 1, 1));
+            result.Add(this.pieces.board.squares.Up_right(this.square, 1, 1));
+            result.Add(this.pieces.board.squares.Down_right(this.square, 1, 1));
         }
 
 
@@ -65,16 +79,16 @@ public abstract class APawn : APiece
     {
         var result = new List<ASquare>();
 
-        result = board.Add_to_list_if_can_move(result, this, this.direction.Forward(this.square, 1));
+        result = this.pieces.board.Add_to_list_if_can_move(result, this, this.direction.Forward(this.square, 1));
 
         if (!this.moved)
         {
-            result = board.Add_to_list_if_can_move(result, this, this.direction.Forward(this.square, 2));
+            result = this.pieces.board.Add_to_list_if_can_move(result, this, this.direction.Forward(this.square, 2));
         }
 
         foreach (ASquare square in this.Squares_which_this_piece_see())
         {
-            result = board.Add_to_list_if_can_capture(result, this, square);
+            result = this.pieces.board.Add_to_list_if_can_capture(result, this, square);
         }
 
         result = this.Add_to_list_if_en_passant(result);
@@ -82,6 +96,12 @@ public abstract class APawn : APiece
         return result;
     }
 
+    /// <summary>
+    /// Add to list the square where you can move only if en passant. 
+    /// The main use is adding the square en passant in a list for posible moves.
+    /// </summary>
+    /// <param name="list"></param>
+    /// <returns></returns>
     public List<ASquare> Add_to_list_if_en_passant(List<ASquare> list)
     {
         if (this != null && this.square != null && this.direction != null)
@@ -103,7 +123,7 @@ public abstract class APawn : APiece
                 if (square_target_piece != null && square_target_piece.piece != null && square_target_piece.piece.GetComponent<APawn>() != null && square_target_piece.piece.GetComponent<APawn>().is_en_passant_target)
                 {
                     list.Add(this.direction.Forward(square_target_piece, 1));
-                }
+                } 
             }
         }
         return list;
@@ -111,6 +131,7 @@ public abstract class APawn : APiece
 
     /// <summary>
     /// Try to capture the target pawn en passant, and return if can do it or not
+    /// The main use is when the user clicks on the square destination en passant when is enabled (after click this pawn)
     /// </summary>
     /// <param name="square_destination">Square which this pawn will be after capture en passant</param>
     /// <returns></returns>
@@ -147,5 +168,25 @@ public abstract class APawn : APiece
             this.is_en_passant_target = false;
         }
         return this.is_en_passant_target;
+    }
+
+   
+
+    public int Open_box_promotion()
+    {
+        int id_piece_result = this.id_piece;
+        //var box_read = this.pieces.board.game.GetComponentInChildren<Box_promote>();
+        Debug.Log(APawn.box_promote);
+        //box_read.Show(this);
+
+
+
+        return id_piece_result;
+    }
+
+
+    public void Default_values()
+    {
+        this.Awake();
     }
 }

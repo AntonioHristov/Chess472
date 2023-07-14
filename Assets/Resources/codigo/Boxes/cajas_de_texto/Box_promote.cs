@@ -1,85 +1,83 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Box_promote : MonoBehaviour
+public class Box_promote : ABox
 {
+    //public Button White_queen;
+    //public Button White_rook;
+    //public Button White_bishop;
+    //public Button White_knight;
+    //public Button Black_queen;
+    //public Button Black_rook;
+    //public Button Black_bishop;
+    //public Button Black_knight;
 
-    public piezas las_piezas;
-    public Button dama_blanco;
-    public Button torre_blanco;
-    public Button alfil_blanco;
-    public Button caballo_blanco;
-    public Button dama_negro;
-    public Button torre_negro;
-    public Button alfil_negro;
-    public Button caballo_negro;
-
-    public bool mostrando_caja_de_texto = false;
+    //public bool mostrando_caja_de_texto = false;
 
 
-   
-
-    private void Awake()
+    public new void Show()
     {
-        //this.Hide();
-    }
-
-        // Update is called once per frame
-        void Update()
-    {
-        /*
-        if (!mostrando_caja_de_texto)
+        this.Desactivate_all_buttons();
+        if (APawn.promotion.is_white)
         {
-            Hide();
-        }
-        */
-    }
-
-    public void Show(APiece piece)
-    {
-        todas_las_piezas_activas();
-        if (piece.is_white)
-        {
-            dama_negro.gameObject.SetActive(false);
-            torre_negro.gameObject.SetActive(false);
-            alfil_negro.gameObject.SetActive(false);
-            caballo_negro.gameObject.SetActive(false);
+            base.Activate_button(this.Get_button_white_queen());
+            base.Activate_button(this.Get_button_white_rook());
+            base.Activate_button(this.Get_button_white_bishop());
+            base.Activate_button(this.Get_button_white_knight());
         }
         else
         {
-            dama_blanco.gameObject.SetActive(false);
-            torre_blanco.gameObject.SetActive(false);
-            alfil_blanco.gameObject.SetActive(false);
-            caballo_blanco.gameObject.SetActive(false);
+            base.Activate_button(this.Get_button_black_queen());
+            base.Activate_button(this.Get_button_black_rook());
+            base.Activate_button(this.Get_button_black_bishop());
+            base.Activate_button(this.Get_button_black_knight());
         }
-        this.mostrando_caja_de_texto = true;
-        Time.timeScale = 0;
-        this.gameObject.SetActive(true);
-
-
+        base.Show();
     }
 
-    public void Hide()
+
+    #region Get_buttons
+
+    public AButton Get_button_white_queen()
     {
-        mostrando_caja_de_texto = false;
-        Time.timeScale = 1;
-        this.gameObject.SetActive(false);
+        return base.Get_button_by_sprite(Sprites.Get_white_queen());
     }
 
-    public void todas_las_piezas_activas()
+    public AButton Get_button_white_rook()
     {
-        //para evitar errores de desactivar pieza desactivada y tener todas las piezas desactivadas
-        dama_negro.gameObject.SetActive(true);
-        torre_negro.gameObject.SetActive(true);
-        alfil_negro.gameObject.SetActive(true);
-        caballo_negro.gameObject.SetActive(true);
-        dama_blanco.gameObject.SetActive(true);
-        torre_blanco.gameObject.SetActive(true);
-        alfil_blanco.gameObject.SetActive(true);
-        caballo_blanco.gameObject.SetActive(true);
+        return base.Get_button_by_sprite(Sprites.Get_white_rook());
     }
-    
+
+    public AButton Get_button_white_bishop()
+    {
+        return base.Get_button_by_sprite(Sprites.Get_white_bishop());
+    }
+
+    public AButton Get_button_white_knight()
+    {
+        return base.Get_button_by_sprite(Sprites.Get_white_knight());
+    }
+
+    public AButton Get_button_black_queen()
+    {
+        return base.Get_button_by_sprite(Sprites.Get_black_queen());
+    }
+
+    public AButton Get_button_black_rook()
+    {
+        return base.Get_button_by_sprite(Sprites.Get_black_rook());
+    }
+
+    public AButton Get_button_black_bishop()
+    {
+        return base.Get_button_by_sprite(Sprites.Get_white_bishop());
+    }
+
+    public AButton Get_button_black_knight()
+    {
+        return base.Get_button_by_sprite(Sprites.Get_black_knight());
+    }
+
+    #endregion
 
 }

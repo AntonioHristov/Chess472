@@ -5389,6 +5389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5871c3e80e5d1fd49840a2157b6b7b38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttons: []
   las_piezas: {fileID: 0}
   dama_blanco: {fileID: 1244790572}
   torre_blanco: {fileID: 1590170}
@@ -9636,16 +9637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1870ea01d5663a4b8faa4ddda37c005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  las_piezas: {fileID: 0}
-  dama_blanco: {fileID: 933046435}
-  torre_blanco: {fileID: 332958891}
-  alfil_blanco: {fileID: 811813618}
-  caballo_blanco: {fileID: 1424618263}
-  dama_negro: {fileID: 1043095804}
-  torre_negro: {fileID: 1480705302}
-  alfil_negro: {fileID: 428817636}
-  caballo_negro: {fileID: 799523631}
-  mostrando_caja_de_texto: 0
+  buttons: []
 --- !u!1 &679379525
 GameObject:
   m_ObjectHideFlags: 0
@@ -13458,6 +13450,7 @@ GameObject:
   - component: {fileID: 933046437}
   - component: {fileID: 933046436}
   - component: {fileID: 933046435}
+  - component: {fileID: 933046438}
   m_Layer: 0
   m_Name: dama_blanca_coronar
   m_TagString: Untagged
@@ -13574,6 +13567,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 933046433}
   m_CullTransparentMesh: 0
+--- !u!114 &933046438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933046433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17d9e62df5eb6714087c7bab9d702242, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &940056298
 GameObject:
   m_ObjectHideFlags: 0
@@ -25226,6 +25231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5871c3e80e5d1fd49840a2157b6b7b38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttons: []
   las_piezas: {fileID: 0}
   dama_blanco: {fileID: 0}
   torre_blanco: {fileID: 0}

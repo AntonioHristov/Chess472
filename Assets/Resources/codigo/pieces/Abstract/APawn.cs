@@ -8,7 +8,10 @@ public abstract class APawn : APiece
     public override int id_piece { get; set; } // = ID_PAWN; etc
     public bool is_en_passant_target { get; set; }
     public bool moved { get; set; }
+
+    public static APawn promotion;
     public static Box_promote box_promote;
+    public static Box_confirm_promotion box_confirm_promotion;
 
 
     new public void Awake()
@@ -172,16 +175,15 @@ public abstract class APawn : APiece
 
    
 
-    public int Open_box_promotion()
+    public void Open_box_promotion()
     {
-        int id_piece_result = this.id_piece;
-        //var box_read = this.pieces.board.game.GetComponentInChildren<Box_promote>();
-        Debug.Log(APawn.box_promote);
-        //box_read.Show(this);
+        APawn.promotion = this;
+        APawn.box_promote.Show();
+    }
 
-
-
-        return id_piece_result;
+    public void Open_box_confirm_promotion(Sprite sprite_promotion)
+    {
+        APawn.box_confirm_promotion.Show();
     }
 
 

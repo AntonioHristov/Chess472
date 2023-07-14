@@ -61,11 +61,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Resources\codigo\Board\Board.cs" />
+    <Compile Include="Assets\Resources\codigo\Boxes\ABox.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_confirm_promotion.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_promote.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_read.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_write.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_yes_no.cs" />
+    <Compile Include="Assets\Resources\codigo\Buttons\AButton.cs" />
+    <Compile Include="Assets\Resources\codigo\Buttons\Promotion\Btn_wq.cs" />
     <Compile Include="Assets\Resources\codigo\Common\Common.cs" />
     <Compile Include="Assets\Resources\codigo\Direction\ADirection.cs" />
     <Compile Include="Assets\Resources\codigo\Direction\Instances\Down.cs" />

@@ -9,7 +9,7 @@ public abstract class ABox : MonoBehaviour
 
     public void Awake()
     {
-        buttons = this.GetComponentsInChildren<AButton>();
+        this.buttons = this.GetComponentsInChildren<AButton>();
     }
 
 

@@ -9,10 +9,6 @@ public abstract class APawn : APiece
     public bool is_en_passant_target { get; set; }
     public bool moved { get; set; }
 
-    public static APawn promotion;
-    public static Box_promote box_promote;
-    public static Box_confirm_promotion box_confirm_promotion;
-
 
     new public void Awake()
     {
@@ -28,11 +24,7 @@ public abstract class APawn : APiece
 
     public void Start()
     {
-        if (!APawn.box_promote && this.pieces && this.pieces.board && this.pieces.board.game)
-        {
-            APawn.box_promote = this.pieces.board.game.GetComponentInChildren<Box_promote>();
-            APawn.box_promote.Hide();
-        }
+
     }
 
 
@@ -177,13 +169,12 @@ public abstract class APawn : APiece
 
     public void Open_box_promotion()
     {
-        APawn.promotion = this;
-        APawn.box_promote.Show();
+        this.pieces.board.game.boxes.Get_box_promote().Show(this);
     }
 
-    public void Open_box_confirm_promotion(Sprite sprite_promotion)
+    public void Open_box_confirm_promotion(APawn pawn, Sprite sprite_promotion)
     {
-        APawn.box_confirm_promotion.Show();
+        this.pieces.board.game.boxes.Get_box_confirm_promotion().Show();
     }
 
 

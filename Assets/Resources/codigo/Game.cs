@@ -7,9 +7,9 @@ public class Game : MonoBehaviour
     private const bool WHITE_TURN = true;
     private const bool BLACK_TURN = false;
 
+
+    public Boxes boxes { get; set; }
     public Board board { get; set; }
-    public Pieces pieces { get; set; }
-    public Squares squares { get; set; }
     public bool is_white_turn;
     //public bool is_white_turn { get; set; }
     public bool is_finished { get; set; }
@@ -86,6 +86,7 @@ public class Game : MonoBehaviour
     void Awake()
     {
         board = this.GetComponentInChildren<Board>();
+        boxes = this.GetComponentInChildren<Boxes>();
     }
 
     // Start is called before the first frame update

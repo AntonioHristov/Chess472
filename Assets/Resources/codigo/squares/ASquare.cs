@@ -237,7 +237,6 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
 
                     if ( !piece_clicked.GetComponent<APawn>().direction.Forward(this, 5))
                     {
-                        Debug.Log("open promotion box");
                         piece_clicked.GetComponent<APawn>().Open_box_promotion();
                     }
                 }

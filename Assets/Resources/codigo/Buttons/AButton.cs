@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public abstract class AButton : MonoBehaviour
 {
-    void Awake()
+    public void Awake()
     {
         this.gameObject.AddComponent<Image>();
         this.gameObject.AddComponent<Button>();

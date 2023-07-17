@@ -77,6 +77,7 @@
     <Compile Include="Assets\Resources\codigo\Buttons\Promotion\White\Btn_white_knight.cs" />
     <Compile Include="Assets\Resources\codigo\Buttons\Promotion\White\Btn_white_queen.cs" />
     <Compile Include="Assets\Resources\codigo\Buttons\Promotion\White\Btn_white_rook.cs" />
+    <Compile Include="Assets\Resources\codigo\Buttons\Value\Yes_no\Btn_no.cs" />
     <Compile Include="Assets\Resources\codigo\Buttons\Value\Yes_no\Btn_yes.cs" />
     <Compile Include="Assets\Resources\codigo\Common\Common.cs" />
     <Compile Include="Assets\Resources\codigo\Direction\ADirection.cs" />
@@ -85,7 +86,8 @@
     <Compile Include="Assets\Resources\codigo\Direction\Instances\Right.cs" />
     <Compile Include="Assets\Resources\codigo\Direction\Instances\Up.cs" />
     <Compile Include="Assets\Resources\codigo\Game.cs" />
-    <Compile Include="Assets\Resources\codigo\partida.cs" />
+    <Compile Include="Assets\Resources\codigo\Images\AImage.cs" />
+    <Compile Include="Assets\Resources\codigo\Images\Img_confirm_promotion\Img_confirm_promotion.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\Abstract\ABishop.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\Abstract\AKing.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\Abstract\AKnight.cs" />
@@ -100,8 +102,6 @@
     <Compile Include="Assets\Resources\codigo\Pieces\black\Black_queen.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\black\Black_rook.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\Pieces.cs" />
-    <Compile Include="Assets\Resources\codigo\Pieces\piezas.cs" />
-    <Compile Include="Assets\Resources\codigo\Pieces\propiedades_pieza.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\white\White_bishop.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\white\White_king.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\white\White_knight.cs" />
@@ -109,7 +109,6 @@
     <Compile Include="Assets\Resources\codigo\Pieces\white\White_queen.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\white\White_rook.cs" />
     <Compile Include="Assets\Resources\codigo\Squares\ASquare.cs" />
-    <Compile Include="Assets\Resources\codigo\Squares\casillas.cs" />
     <Compile Include="Assets\Resources\codigo\Squares\instances\Borders\Square_border.cs" />
     <Compile Include="Assets\Resources\codigo\Squares\instances\In_game\1\A1.cs" />
     <Compile Include="Assets\Resources\codigo\Squares\instances\In_game\1\B1.cs" />
@@ -176,7 +175,6 @@
     <Compile Include="Assets\Resources\codigo\Squares\instances\In_game\8\G8.cs" />
     <Compile Include="Assets\Resources\codigo\Squares\instances\In_game\8\H8.cs" />
     <Compile Include="Assets\Resources\codigo\Squares\instances\When_die\Square_when_die.cs" />
-    <Compile Include="Assets\Resources\codigo\Squares\propiedades_casilla.cs" />
     <Compile Include="Assets\Resources\codigo\Squares\Squares.cs" />
     <Compile Include="Assets\Resources\codigo\Texts\path\sprites\Sprites.cs" />
     <None Include="Assets\Resources\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />

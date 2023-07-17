@@ -57,6 +57,11 @@ public abstract class ABox : MonoBehaviour
         }
     }
 
+    public AButton[] Get_all_buttons()
+    {
+        return this.buttons;
+    }
+
     public AButton Get_button_by_sprite(Sprite sprite)
     {
         foreach (AButton button in this.buttons)

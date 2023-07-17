@@ -8,61 +8,33 @@ public class Box_promote : ABox
         base.Desactivate_all_buttons();
         if (pawn.is_white)
         {
-            var button_white_queen = this.Get_button_white_queen();
-            button_white_queen.GetComponent<Button>().onClick.RemoveAllListeners();
-            button_white_queen.GetComponent<Button>().onClick.AddListener(() => pawn.Open_box_confirm_promotion(pawn, button_white_queen.GetComponent<Image>().sprite));
-            button_white_queen.GetComponent<Button>().onClick.AddListener(() => this.Hide());
-
-            var button_white_rook = this.Get_button_white_rook();
-            button_white_rook.GetComponent<Button>().onClick.RemoveAllListeners();
-            button_white_rook.GetComponent<Button>().onClick.AddListener(() => pawn.Open_box_confirm_promotion(pawn, button_white_rook.GetComponent<Image>().sprite));
-            button_white_rook.GetComponent<Button>().onClick.AddListener(() => this.Hide());
-
-            var button_white_bishop = this.Get_button_white_bishop();
-            button_white_bishop.GetComponent<Button>().onClick.RemoveAllListeners();
-            button_white_bishop.GetComponent<Button>().onClick.AddListener(() => pawn.Open_box_confirm_promotion(pawn, button_white_bishop.GetComponent<Image>().sprite));
-            button_white_bishop.GetComponent<Button>().onClick.AddListener(() => this.Hide());
-
-            var button_white_knight = this.Get_button_white_knight();
-            button_white_knight.GetComponent<Button>().onClick.RemoveAllListeners();
-            button_white_knight.GetComponent<Button>().onClick.AddListener(() => pawn.Open_box_confirm_promotion(pawn, button_white_knight.GetComponent<Image>().sprite));
-            button_white_knight.GetComponent<Button>().onClick.AddListener(() => this.Hide());
-
-            base.Activate_button(button_white_queen);
-            base.Activate_button(button_white_rook);
-            base.Activate_button(button_white_bishop);
-            base.Activate_button(button_white_knight);
+            Default_listeners_and_activate(pawn, this.Get_button_white_queen());
+            Default_listeners_and_activate(pawn, this.Get_button_white_rook());
+            Default_listeners_and_activate(pawn, this.Get_button_white_bishop());
+            Default_listeners_and_activate(pawn, this.Get_button_white_knight());
         }
         else
         {
-            var button_black_queen = this.Get_button_black_queen();
-            button_black_queen.GetComponent<Button>().onClick.RemoveAllListeners();
-            button_black_queen.GetComponent<Button>().onClick.AddListener(() => pawn.Open_box_confirm_promotion(pawn, button_black_queen.GetComponent<Image>().sprite));
-            button_black_queen.GetComponent<Button>().onClick.AddListener(() => this.Hide());
-
-            var button_black_rook = this.Get_button_black_rook();
-            button_black_rook.GetComponent<Button>().onClick.RemoveAllListeners();
-            button_black_rook.GetComponent<Button>().onClick.AddListener(() => pawn.Open_box_confirm_promotion(pawn, button_black_rook.GetComponent<Image>().sprite));
-            button_black_rook.GetComponent<Button>().onClick.AddListener(() => this.Hide());
-
-            var button_black_bishop = this.Get_button_black_bishop();
-            button_black_bishop.GetComponent<Button>().onClick.RemoveAllListeners();
-            button_black_bishop.GetComponent<Button>().onClick.AddListener(() => pawn.Open_box_confirm_promotion(pawn, button_black_bishop.GetComponent<Image>().sprite));
-            button_black_bishop.GetComponent<Button>().onClick.AddListener(() => this.Hide());
-
-            var button_black_knight = this.Get_button_black_knight();
-            button_black_knight.GetComponent<Button>().onClick.RemoveAllListeners();
-            button_black_knight.GetComponent<Button>().onClick.AddListener(() => pawn.Open_box_confirm_promotion(pawn, button_black_knight.GetComponent<Image>().sprite));
-            button_black_knight.GetComponent<Button>().onClick.AddListener(() => this.Hide());
-
-            base.Activate_button(button_black_queen);
-            base.Activate_button(button_black_rook);
-            base.Activate_button(button_black_bishop);
-            base.Activate_button(button_black_knight);
+            Default_listeners_and_activate(pawn, this.Get_button_black_queen());
+            Default_listeners_and_activate(pawn, this.Get_button_black_rook());
+            Default_listeners_and_activate(pawn, this.Get_button_black_bishop());
+            Default_listeners_and_activate(pawn, this.Get_button_black_knight());
         }
         base.Show();
     }
 
+    public void Default_listeners(APawn pawn, AButton button)
+    {
+        button.GetComponent<Button>().onClick.RemoveAllListeners();
+        button.GetComponent<Button>().onClick.AddListener(() => pawn.Open_box_confirm_promotion(button.GetComponent<Image>().sprite));
+        button.GetComponent<Button>().onClick.AddListener(() => base.Hide());
+    }
+
+    public void Default_listeners_and_activate(APawn pawn, AButton button)
+    {
+        this.Default_listeners(pawn, button);
+        base.Activate_button(button);
+    }
 
     #region Get_buttons
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class APawn : APiece
 {
@@ -8,6 +9,7 @@ public abstract class APawn : APiece
     public override int id_piece { get; set; } // = ID_PAWN; etc
     public bool is_en_passant_target { get; set; }
     public bool moved { get; set; }
+    public APiece promoted { get; set; }
 
 
     new public void Awake()
@@ -31,6 +33,8 @@ public abstract class APawn : APiece
 
     public override List<ASquare> Squares_which_this_piece_see()
     {
+
+
         var letter = this.square.id_letter;
         var number = this.square.id_number;
 
@@ -72,6 +76,13 @@ public abstract class APawn : APiece
 
     public override List<ASquare> Posible_moves()
     {
+        // Continue this logic and remove this comment
+        if (this.promoted)
+        {
+            return Posible_moves_promoted();
+        }
+        //
+
         var result = new List<ASquare>();
 
         result = this.pieces.board.Add_to_list_if_can_move(result, this, this.direction.Forward(this.square, 1));
@@ -172,9 +183,57 @@ public abstract class APawn : APiece
         this.pieces.board.game.boxes.Get_box_promote().Show(this);
     }
 
-    public void Open_box_confirm_promotion(APawn pawn, Sprite sprite_promotion)
+    public void Open_box_confirm_promotion(Sprite sprite_promotion)
     {
-        this.pieces.board.game.boxes.Get_box_confirm_promotion().Show();
+        this.pieces.board.game.boxes.Get_box_confirm_promotion().Show(this, sprite_promotion);
+    }
+
+    public void Promote(Sprite sprite_promotion)
+    {
+        if (this.is_white)
+        {
+            if (sprite_promotion == Sprites.Get_white_queen())
+            {
+                this.promoted = new GameObject().AddComponent<White_queen>();                
+            }
+            else if (sprite_promotion == Sprites.Get_white_rook())
+            {
+                this.promoted = new GameObject().AddComponent<White_rook>();
+            }
+            else if (sprite_promotion == Sprites.Get_white_bishop())
+            {
+                this.promoted = new GameObject().AddComponent<White_bishop>();
+            }
+            else //if (sprite_promotion == Sprites.Get_white_knight())
+            {
+                this.promoted = new GameObject().AddComponent<White_knight>();
+            }
+        }
+        else
+        {
+            if (sprite_promotion == Sprites.Get_black_queen())
+            {
+                this.promoted = new GameObject().AddComponent<Black_queen>();
+            }
+            else if (sprite_promotion == Sprites.Get_black_rook())
+            {
+                this.promoted = new GameObject().AddComponent<Black_rook>();
+            }
+            else if (sprite_promotion == Sprites.Get_black_bishop())
+            {
+                this.promoted = new GameObject().AddComponent<Black_bishop>();
+            }
+            else //if (sprite_promotion == Sprites.Get_black_knight())
+            {
+                this.promoted = new GameObject().AddComponent<Black_knight>();
+            }
+        }
+        this.GetComponent<Image>().sprite = sprite_promotion;
+    }
+
+    public List<ASquare> Posible_moves_promoted()
+    {
+        return this.promoted.Posible_moves();
     }
 
 

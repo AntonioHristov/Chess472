@@ -204,12 +204,13 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         this.Awake();
         
 
-        // if click square in a own piece
+        // if click square with an own piece
         if( this.piece != null && this.piece.is_white == squares.board.game.is_white_turn )
         {
             this.Click_or_unclick();
 
-            if (this.squares.clicked == null || this.squares.clicked == this)
+            // if there's no a clicked square or clicked square is this
+            if ( this.squares.clicked == null || this.squares.clicked == this )
             {
                 this.squares.Enable_or_disable(this.piece.Posible_moves().ToArray());
             }
@@ -223,7 +224,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
             this.squares.Disable(squares.clicked.piece.Posible_moves().ToArray());
             this.squares.clicked.Unclick();
 
-            if(piece_clicked.GetComponent<APawn>())
+            if(piece_clicked.GetComponent<APawn>() && !piece_clicked.GetComponent<APawn>().Check_is_promoted() )
             {
                 // Trying to capture the target piece en passant , if its not been able to do it, then...
                 if (! piece_clicked.GetComponent<APawn>().Try_capture_en_passant(this) )
@@ -234,14 +235,13 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
                     // if pawn's first move and go 2 squares, is a target for en passant, if not not.
                     piece_clicked.GetComponent<APawn>().Is_en_passant_target(this);
 
+                    piece_clicked.GetComponent<APawn>().moved = true;
 
-                    if ( !piece_clicked.GetComponent<APawn>().direction.Forward(this, 5))
+                    if ( !piece_clicked.GetComponent<APawn>().direction.Forward(this, 1))
                     {
                         piece_clicked.GetComponent<APawn>().Open_box_promotion();
                     }
                 }
-
-                piece_clicked.GetComponent<APawn>().moved = true;
             }
 
 

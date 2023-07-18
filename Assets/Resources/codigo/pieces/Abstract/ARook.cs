@@ -5,12 +5,13 @@ using UnityEngine;
 public abstract class ARook : APiece
 {
     public override int id_piece { get; set; }
-
+	public bool is_promoted { get; set; }
 
     new public void Awake()
     {
         base.Awake();
         this.id_piece = ID_ROOK;
+		this.is_promoted = false;
     }
 
     public override List<ASquare> Squares_which_this_piece_see()

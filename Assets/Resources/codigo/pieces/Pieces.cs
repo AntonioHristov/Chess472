@@ -231,6 +231,11 @@ public class Pieces : MonoBehaviour
         this.Set_default_values(this.in_game);
     }
 
+    public void Update_pieces_in_game()
+    {
+        this.in_game = this.GetComponentsInChildren<APiece>();
+    }
+
     #endregion
 
     #region APawn
@@ -241,6 +246,7 @@ public class Pieces : MonoBehaviour
         {
             foreach (APiece piece in pieces_list)
             {
+                Debug.Log(piece);
                 if (piece.GetComponent<APawn>())
                 {
                     result.Add(piece.GetComponent<APawn>());
@@ -252,6 +258,8 @@ public class Pieces : MonoBehaviour
 
     public APawn[] Get_pawns_in_game()
     {
+        // Update pieces in game in all in game functions
+        this.Update_pieces_in_game();
         return this.Get_pawns(this.in_game);
     }
 
@@ -559,7 +567,7 @@ public class Pieces : MonoBehaviour
 
 
 
-    void Awake()
+    public void Awake()
     {
         this.in_game = this.GetComponentsInChildren<APiece>();
         this.board = this.GetComponentInParent<Board>();

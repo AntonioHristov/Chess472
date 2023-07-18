@@ -9,7 +9,6 @@ public abstract class APawn : APiece
     public override int id_piece { get; set; } // = ID_PAWN; etc
     public bool is_en_passant_target { get; set; }
     public bool moved { get; set; }
-    public APiece promoted { get; set; }
 
 
     new public void Awake()
@@ -34,11 +33,15 @@ public abstract class APawn : APiece
     public override List<ASquare> Squares_which_this_piece_see()
     {
 
-
         var letter = this.square.id_letter;
         var number = this.square.id_number;
 
         var result = new List<ASquare>();
+
+        if (this.Check_is_promoted())
+        {
+            return result;
+        }
 
         if ( this.direction == null)
         {
@@ -75,15 +78,13 @@ public abstract class APawn : APiece
     }
 
     public override List<ASquare> Posible_moves()
-    {
-        // Continue this logic and remove this comment
-        if (this.promoted)
-        {
-            return Posible_moves_promoted();
-        }
-        //
-
+    {    
         var result = new List<ASquare>();
+
+        if (this.Check_is_promoted())
+        {
+            return result;
+        }
 
         result = this.pieces.board.Add_to_list_if_can_move(result, this, this.direction.Forward(this.square, 1));
 
@@ -110,7 +111,7 @@ public abstract class APawn : APiece
     /// <returns></returns>
     public List<ASquare> Add_to_list_if_en_passant(List<ASquare> list)
     {
-        if (this != null && this.square != null && this.direction != null)
+        if (this && !this.Check_is_promoted() && this.square && this.direction)
         {
             var posible_squares_piece = new List<ASquare>();
 
@@ -146,7 +147,7 @@ public abstract class APawn : APiece
         // if move chosen is en passant, capture the pawn target
         if
             (
-            square_destination && this.direction &&
+            !this.Check_is_promoted() && square_destination && this.direction &&
             this.direction.Forward(square_destination, -1) &&
             this.direction.Forward(square_destination, -1).piece &&
             this.direction.Forward(square_destination, -1).piece.GetComponent<APawn>() &&
@@ -165,7 +166,7 @@ public abstract class APawn : APiece
     public bool Is_en_passant_target(ASquare square_destination)
     {
         // if pawn's first move and go 2 squares, is a target for en passant
-        if ( square_destination && !this.moved && this.direction.Forward(this.square, 2) == square_destination)
+        if (!this.Check_is_promoted() && square_destination && !this.moved && this.direction.Forward(this.square, 2) == square_destination)
         {
             this.is_en_passant_target = true;
         }
@@ -194,48 +195,66 @@ public abstract class APawn : APiece
         {
             if (sprite_promotion == Sprites.Get_white_queen())
             {
-                this.promoted = new GameObject().AddComponent<White_queen>();                
+                this.gameObject.AddComponent<White_queen>();              
+                this.GetComponent<White_queen>().is_promoted = true;              
+                this.GetComponent<White_queen>().square = this.square;
             }
             else if (sprite_promotion == Sprites.Get_white_rook())
             {
-                this.promoted = new GameObject().AddComponent<White_rook>();
+                this.gameObject.AddComponent<White_rook>();
+                this.GetComponent<White_rook>().is_promoted = true;
+                this.GetComponent<White_rook>().square = this.square;
             }
             else if (sprite_promotion == Sprites.Get_white_bishop())
             {
-                this.promoted = new GameObject().AddComponent<White_bishop>();
+                this.gameObject.AddComponent<White_bishop>();
+                this.GetComponent<White_bishop>().is_promoted = true;
+                this.GetComponent<White_bishop>().square = this.square;
             }
             else //if (sprite_promotion == Sprites.Get_white_knight())
             {
-                this.promoted = new GameObject().AddComponent<White_knight>();
+                this.gameObject.AddComponent<White_knight>();
+                this.GetComponent<White_knight>().is_promoted = true;
+                this.GetComponent<White_knight>().square = this.square;
             }
+            Destroy(GetComponent<White_pawn>());
         }
         else
         {
             if (sprite_promotion == Sprites.Get_black_queen())
             {
-                this.promoted = new GameObject().AddComponent<Black_queen>();
+                this.gameObject.AddComponent<Black_queen>();
+                this.GetComponent<Black_queen>().is_promoted = true;
+                this.GetComponent<Black_queen>().square = this.square;
             }
             else if (sprite_promotion == Sprites.Get_black_rook())
             {
-                this.promoted = new GameObject().AddComponent<Black_rook>();
+                this.gameObject.AddComponent<Black_rook>();
+                this.GetComponent<Black_rook>().is_promoted = true;
+                this.GetComponent<Black_rook>().square = this.square;
             }
             else if (sprite_promotion == Sprites.Get_black_bishop())
             {
-                this.promoted = new GameObject().AddComponent<Black_bishop>();
+                this.gameObject.AddComponent<Black_bishop>();
+                this.GetComponent<Black_bishop>().is_promoted = true;
+                this.GetComponent<Black_bishop>().square = this.square;
             }
             else //if (sprite_promotion == Sprites.Get_black_knight())
             {
-                this.promoted = new GameObject().AddComponent<Black_knight>();
+                this.gameObject.AddComponent<Black_knight>();
+                this.GetComponent<Black_knight>().is_promoted = true;
+                this.GetComponent<Black_knight>().square = this.square;
             }
+            Destroy(GetComponent<Black_pawn>());
         }
+
         this.GetComponent<Image>().sprite = sprite_promotion;
     }
 
-    public List<ASquare> Posible_moves_promoted()
+    public bool Check_is_promoted()
     {
-        return this.promoted.Posible_moves();
+        return this.GetComponent<AQueen>() || this.GetComponent<ARook>() || this.GetComponent<ABishop>() || this.GetComponent<AKnight>();
     }
-
 
     public void Default_values()
     {

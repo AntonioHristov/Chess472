@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Img_confirm_promotion : AImage
+public class Img_confirm_promotion : AOnlyImage
 {
 
 }

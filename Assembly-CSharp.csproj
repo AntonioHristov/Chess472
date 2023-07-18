@@ -86,7 +86,7 @@
     <Compile Include="Assets\Resources\codigo\Direction\Instances\Right.cs" />
     <Compile Include="Assets\Resources\codigo\Direction\Instances\Up.cs" />
     <Compile Include="Assets\Resources\codigo\Game.cs" />
-    <Compile Include="Assets\Resources\codigo\Images\AImage.cs" />
+    <Compile Include="Assets\Resources\codigo\Images\AOnlyImage.cs" />
     <Compile Include="Assets\Resources\codigo\Images\Img_confirm_promotion\Img_confirm_promotion.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\Abstract\ABishop.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\Abstract\AKing.cs" />

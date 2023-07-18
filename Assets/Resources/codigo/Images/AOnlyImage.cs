@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class AImage : MonoBehaviour
+public abstract class AOnlyImage : MonoBehaviour
 {
     public void Awake()
     {

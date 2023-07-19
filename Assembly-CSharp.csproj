@@ -89,6 +89,7 @@
     <Compile Include="Assets\Resources\codigo\Images\AOnlyImage.cs" />
     <Compile Include="Assets\Resources\codigo\Images\Img_confirm_promotion\Img_confirm_promotion.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\Abstract\ABishop.cs" />
+    <Compile Include="Assets\Resources\codigo\Pieces\Abstract\ACan_be_promotion.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\Abstract\AKing.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\Abstract\AKnight.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\Abstract\APawn.cs" />

@@ -35,6 +35,24 @@ public class Board : MonoBehaviour
     {
         if (piece && square)
         {
+            /*
+            if(piece.GetComponent<APawn>().Check_is_promoted())
+            {
+                if(piece.is_white)
+                {
+                    if (piece.GetComponent<AQueen>())
+                    {
+                        piece = piece.GetComponent<White_queen>();
+                    }
+                   
+                }
+                else
+                {
+
+                }
+            }
+            */
+
             // If there's an enemy piece in the new square, the enemy piece die
             if (square.piece && square.piece.is_white != piece.is_white)
             {

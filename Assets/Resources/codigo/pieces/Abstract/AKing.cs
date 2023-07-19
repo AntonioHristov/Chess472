@@ -30,4 +30,9 @@ public abstract class AKing : APiece
         var result = new List<ASquare>();
         return result;
     }
+
+    public override void Default_values()
+    {
+        this.Awake();
+    }
 }

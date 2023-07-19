@@ -71,6 +71,8 @@ public abstract class APiece : MonoBehaviour
 
     public abstract List<ASquare> Squares_which_this_piece_see();
     public abstract List<ASquare> Posible_moves();
+    public abstract void Default_values();
+
     public void Die()
     { this.is_alive = false; this.GetComponentInParent<Board>().Piece_to_square(this, when_die); }
     public void Revive(ASquare square)

@@ -70,7 +70,7 @@ public class Box_promote : ABox
 
     public AButton Get_button_black_bishop()
     {
-        return base.Get_button_by_sprite(Sprites.Get_white_bishop());
+        return base.Get_button_by_sprite(Sprites.Get_black_bishop());
     }
 
     public AButton Get_button_black_knight()

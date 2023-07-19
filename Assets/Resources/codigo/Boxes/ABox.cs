@@ -15,13 +15,11 @@ public abstract class ABox : MonoBehaviour
 
     public void Show()
     {
-        Time.timeScale = 0;
         this.gameObject.SetActive(true);
     }
 
     public void Hide()
     {
-        Time.timeScale = 1;
         this.gameObject.SetActive(false);
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -189,66 +190,86 @@ public abstract class APawn : APiece
         this.pieces.board.game.boxes.Get_box_confirm_promotion().Show(this, sprite_promotion);
     }
 
+    #region Add component promotion
+
+    // FIXME. Try to find the way to not repeat that same code
+
+    public void Add_component_promotion(Sprite sprite_promotion)
+    {
+        if (sprite_promotion == Sprites.Get_white_queen())
+        {
+            this.gameObject.AddComponent<White_queen>();
+            this.GetComponent<White_queen>().is_promoted = true;
+            this.GetComponent<White_queen>().square = this.square;
+            this.GetComponent<White_queen>().square.piece = this.GetComponent<White_queen>();
+        }
+        else if (sprite_promotion == Sprites.Get_white_rook())
+        {
+            this.gameObject.AddComponent<White_rook>();
+            this.GetComponent<White_rook>().is_promoted = true;
+            this.GetComponent<White_rook>().square = this.square;
+            this.GetComponent<White_rook>().square.piece = this.GetComponent<White_rook>();
+        }
+        else if (sprite_promotion == Sprites.Get_white_bishop())
+        {
+            this.gameObject.AddComponent<White_bishop>();
+            this.GetComponent<White_bishop>().is_promoted = true;
+            this.GetComponent<White_bishop>().square = this.square;
+            this.GetComponent<White_bishop>().square.piece = this.GetComponent<White_bishop>();
+        }
+        else if (sprite_promotion == Sprites.Get_white_knight())
+        {
+            this.gameObject.AddComponent<White_knight>();
+            this.GetComponent<White_knight>().is_promoted = true;
+            this.GetComponent<White_knight>().square = this.square;
+            this.GetComponent<White_knight>().square.piece = this.GetComponent<White_knight>();
+        }
+        else if (sprite_promotion == Sprites.Get_black_queen())
+        {
+            this.gameObject.AddComponent<Black_queen>();
+            this.GetComponent<Black_queen>().is_promoted = true;
+            this.GetComponent<Black_queen>().square = this.square;
+            this.GetComponent<Black_queen>().square.piece = this.GetComponent<Black_queen>();
+        }
+        else if (sprite_promotion == Sprites.Get_black_rook())
+        {
+            this.gameObject.AddComponent<Black_rook>();
+            this.GetComponent<Black_rook>().is_promoted = true;
+            this.GetComponent<Black_rook>().square = this.square;
+            this.GetComponent<Black_rook>().square.piece = this.GetComponent<Black_rook>();
+        }
+        else if (sprite_promotion == Sprites.Get_black_bishop())
+        {
+            this.gameObject.AddComponent<Black_bishop>();
+            this.GetComponent<Black_bishop>().is_promoted = true;
+            this.GetComponent<Black_bishop>().square = this.square;
+            this.GetComponent<Black_bishop>().square.piece = this.GetComponent<Black_bishop>();
+        }
+        else //if (sprite_promotion == Sprites.Get_black_knight())
+        {
+            this.gameObject.AddComponent<Black_knight>();
+            this.GetComponent<Black_knight>().is_promoted = true;
+            this.GetComponent<Black_knight>().square = this.square;
+            this.GetComponent<Black_knight>().square.piece = this.GetComponent<Black_knight>();
+        }
+
+        this.GetComponent<Image>().sprite = sprite_promotion;
+    }
+
+    #endregion
+
     public void Promote(Sprite sprite_promotion)
     {
         if (this.is_white)
         {
-            if (sprite_promotion == Sprites.Get_white_queen())
-            {
-                this.gameObject.AddComponent<White_queen>();              
-                this.GetComponent<White_queen>().is_promoted = true;              
-                this.GetComponent<White_queen>().square = this.square;
-            }
-            else if (sprite_promotion == Sprites.Get_white_rook())
-            {
-                this.gameObject.AddComponent<White_rook>();
-                this.GetComponent<White_rook>().is_promoted = true;
-                this.GetComponent<White_rook>().square = this.square;
-            }
-            else if (sprite_promotion == Sprites.Get_white_bishop())
-            {
-                this.gameObject.AddComponent<White_bishop>();
-                this.GetComponent<White_bishop>().is_promoted = true;
-                this.GetComponent<White_bishop>().square = this.square;
-            }
-            else //if (sprite_promotion == Sprites.Get_white_knight())
-            {
-                this.gameObject.AddComponent<White_knight>();
-                this.GetComponent<White_knight>().is_promoted = true;
-                this.GetComponent<White_knight>().square = this.square;
-            }
-            Destroy(GetComponent<White_pawn>());
+            Destroy(this.gameObject.GetComponent<White_pawn>());
         }
         else
         {
-            if (sprite_promotion == Sprites.Get_black_queen())
-            {
-                this.gameObject.AddComponent<Black_queen>();
-                this.GetComponent<Black_queen>().is_promoted = true;
-                this.GetComponent<Black_queen>().square = this.square;
-            }
-            else if (sprite_promotion == Sprites.Get_black_rook())
-            {
-                this.gameObject.AddComponent<Black_rook>();
-                this.GetComponent<Black_rook>().is_promoted = true;
-                this.GetComponent<Black_rook>().square = this.square;
-            }
-            else if (sprite_promotion == Sprites.Get_black_bishop())
-            {
-                this.gameObject.AddComponent<Black_bishop>();
-                this.GetComponent<Black_bishop>().is_promoted = true;
-                this.GetComponent<Black_bishop>().square = this.square;
-            }
-            else //if (sprite_promotion == Sprites.Get_black_knight())
-            {
-                this.gameObject.AddComponent<Black_knight>();
-                this.GetComponent<Black_knight>().is_promoted = true;
-                this.GetComponent<Black_knight>().square = this.square;
-            }
-            Destroy(GetComponent<Black_pawn>());
+            Destroy(this.gameObject.GetComponent<Black_pawn>());
         }
 
-        this.GetComponent<Image>().sprite = sprite_promotion;
+        this.Add_component_promotion(sprite_promotion);
     }
 
     public bool Check_is_promoted()
@@ -256,7 +277,8 @@ public abstract class APawn : APiece
         return this.GetComponent<AQueen>() || this.GetComponent<ARook>() || this.GetComponent<ABishop>() || this.GetComponent<AKnight>();
     }
 
-    public void Default_values()
+
+    public override void Default_values()
     {
         this.Awake();
     }

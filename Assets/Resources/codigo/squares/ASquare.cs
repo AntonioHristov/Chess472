@@ -230,14 +230,14 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
                 if (! piece_clicked.GetComponent<APawn>().Try_capture_en_passant(this) )
                 {
                     // All pawns in game are not en passant target. This is because we want a pawn which is an en passant target only the first chance and not more
-                    this.squares.board.pieces.Set_no_targets_en_passant_in_game();
+                    this.squares.board.pieces.Set_no_targets_en_passant_in_game(true);
 
                     // if pawn's first move and go 2 squares, is a target for en passant, if not not.
                     piece_clicked.GetComponent<APawn>().Is_en_passant_target(this);
 
                     piece_clicked.GetComponent<APawn>().moved = true;
 
-                    if ( !piece_clicked.GetComponent<APawn>().direction.Forward(this, 1))
+                    if ( !piece_clicked.GetComponent<APawn>().direction.Forward(this, 5))
                     {
                         piece_clicked.GetComponent<APawn>().Open_box_promotion();
                     }

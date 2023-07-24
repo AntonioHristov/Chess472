@@ -13,12 +13,20 @@ public class White_pawn : APawn
     {
         base.Awake();
         this.is_white = true;
-        if( !direction )
+        if (this.gameObject.GetComponent<ADirection>())
         {
-            this.direction = gameObject.AddComponent(typeof(Up)) as Up;
+            this.direction = this.gameObject.GetComponent<ADirection>();
+        }
+        else if ( !direction && !this.gameObject.GetComponent<ADirection>() )
+        {
+            this.direction = this.gameObject.AddComponent(typeof(Up)) as Up;
         }
 
-        //Image img = gameObject.AddComponent(typeof(Image)) as Image;
-        //this.gameObject.GetComponent<Image>().sprite = Sprites.Get_white_pawn();
+        if(!this.gameObject.GetComponent<Image>())
+        {
+            Image img = gameObject.AddComponent(typeof(Image)) as Image;
+            this.gameObject.GetComponent<Image>().sprite = Sprites.Get_white_pawn();
+        }
+
     }
 }

@@ -16,11 +16,11 @@ public abstract class APiece : MonoBehaviour
     #endregion
 
     #region Properties
-    public ASquare when_die { get; set; }
-    public ASquare square { get; set; }
+    public ASquare when_die;
+    public ASquare square;
     public abstract bool is_white { get; set; }
     public abstract int id_piece { get; set; } // = ID_PAWN; etc
-    public bool is_alive { get; set; }
+    public bool is_alive;
 
 
 
@@ -68,7 +68,11 @@ public abstract class APiece : MonoBehaviour
 
 
 
-
+    /// <summary>
+    /// The Squares which the piece can capture an enemy piece if it there's
+    /// I mean, the squares which this piece attack.
+    /// </summary>
+    /// <returns></returns>
     public abstract List<ASquare> Squares_which_this_piece_see();
     public abstract List<ASquare> Posible_moves();
     public abstract void Default_values();

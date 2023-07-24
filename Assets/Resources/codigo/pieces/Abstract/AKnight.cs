@@ -14,11 +14,26 @@ public abstract class AKnight : ACan_be_promotion
 
     public override List<ASquare> Squares_which_this_piece_see()
     {
-        // Try to implement this, test it and dont forget to test the promotion
         var letter = this.square.id_letter;
         var number = this.square.id_number;
 
         var result = new List<ASquare>();
+
+
+        result.Add(this.square.Up_left(2,1));
+        result.Add(this.square.Up_left(1,2));
+
+        result.Add(this.square.Up_right(1,2));
+        result.Add(this.square.Up_right(2,1));
+
+        result.Add(this.square.Down_left(2, 1));
+        result.Add(this.square.Down_left(1, 2));
+
+        result.Add(this.square.Down_right(1, 2));
+        result.Add(this.square.Down_right(2, 1));
+
+
+
         return result;
     }
 
@@ -28,6 +43,12 @@ public abstract class AKnight : ACan_be_promotion
         var number = this.square.id_number;
 
         var result = new List<ASquare>();
+
+        foreach (ASquare square in this.Squares_which_this_piece_see())
+        {
+            result = this.pieces.board.Add_to_list_if_can_move(result, this, square);
+        }
+
         return result;
     }
 

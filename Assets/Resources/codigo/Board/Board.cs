@@ -13,10 +13,10 @@ public class Board : MonoBehaviour
     /// Rotate or not depending on the turn of the game
     /// This method rotate the board and all pieces in game
     /// </summary>
-    public void Rotate()
+    public void Rotate(bool update_in_game_list = false)
     {
         Common.Rotate_z(this.gameObject);
-        this.pieces.Rotate_in_game();
+        this.pieces.Rotate_in_game(update_in_game_list);
     }
 
     /// <summary>
@@ -35,24 +35,6 @@ public class Board : MonoBehaviour
     {
         if (piece && square)
         {
-            /*
-            if(piece.GetComponent<APawn>().Check_is_promoted())
-            {
-                if(piece.is_white)
-                {
-                    if (piece.GetComponent<AQueen>())
-                    {
-                        piece = piece.GetComponent<White_queen>();
-                    }
-                   
-                }
-                else
-                {
-
-                }
-            }
-            */
-
             // If there's an enemy piece in the new square, the enemy piece die
             if (square.piece && square.piece.is_white != piece.is_white)
             {
@@ -72,50 +54,35 @@ public class Board : MonoBehaviour
     }
 
     /// <summary>
-    /// IN GAME
+    /// Warning, by general pieces like knight, bishop...
+    /// NOT FOR PAWNS, because in that case is not exactly the same thing.
     /// </summary>
+    /// <param name="list"></param>
     /// <param name="piece"></param>
     /// <param name="square"></param>
     /// <returns></returns>
-    public bool Check_can_move(APiece piece, ASquare square)
-    {
-        if( (piece && square) && (square.piece == null || square.piece.is_white == piece.is_white) )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }   
-    }
-
     public List<ASquare> Add_to_list_if_can_move(List<ASquare> list, APiece piece, ASquare square)
     {
-        if ( Check_can_move(piece, square) )
+        if (piece != null && square != null && (square.piece == null || square.piece.is_white != piece.is_white) )
         {
             list.Add(square);
         }
         return list;
     }
-
-    public List<ASquare> Add_to_list_if_can_capture(List<ASquare> list, APiece piece, ASquare square)
+    
+    public void Default_pieces_set_when_die(bool update_in_game_list = false)
     {
-        if (piece != null && square != null && square.piece != null && square.piece.is_white != piece.is_white)
-        {
-            list.Add(square);
-        }
-        return list;
-    }
-
-    public void Default_pieces_to_when_die()
-    {
-        var all_pieces = this.pieces.Get_All_in_game();
+        var all_pieces = this.pieces.Get_All_in_game(update_in_game_list);
         var when_die = squares.when_die;
 
-        for(var count = 0; count < all_pieces.Length; count++)
+        if(all_pieces.Length == when_die.Length)
         {
-            all_pieces[count].when_die = when_die[count];
-        } 
+            for (var count = 0; count < all_pieces.Length; count++)
+            {
+                all_pieces[count].when_die = when_die[count];
+            }
+        }
+
     }
 
     public void Default_pieces_to_squares()

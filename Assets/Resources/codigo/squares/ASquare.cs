@@ -105,22 +105,22 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         return this.squares.Right(this, number);
     }
 
-    public ASquare Up_left(ASquare square, int number_up, int number_left)
+    public ASquare Up_left(int number_up, int number_left)
     {
         return this.squares.Up_left(this, number_up, number_left);
     }
 
-    public ASquare Up_right(ASquare square, int number_up, int number_right)
+    public ASquare Up_right(int number_up, int number_right)
     {
         return this.squares.Up_right(this, number_up, number_right);
     }
 
-    public ASquare Down_left(ASquare square, int number_down, int number_left)
+    public ASquare Down_left(int number_down, int number_left)
     {
         return this.squares.Down_left(this, number_down, number_left);
     }
 
-    public ASquare Down_right(ASquare square, int number_down, int number_right)
+    public ASquare Down_right(int number_down, int number_right)
     {
         return this.squares.Down_right(this, number_down, number_right);
     }
@@ -237,7 +237,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
 
                     piece_clicked.GetComponent<APawn>().moved = true;
 
-                    if ( !piece_clicked.GetComponent<APawn>().direction.Forward(this, 5))
+                    if ( piece_clicked.GetComponent<APawn>().direction.Forward(this, -3))//-7
                     {
                         piece_clicked.GetComponent<APawn>().Open_box_promotion();
                     }
@@ -247,7 +247,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
 
 
             squares.board.Piece_to_square(piece_clicked, this);
-            this.squares.board.game.Next_turn();
+            this.squares.board.game.Next_turn(true);
         }
 
 

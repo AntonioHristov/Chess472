@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
@@ -22,19 +23,20 @@ public class Game : MonoBehaviour
     public void Default_values()
     {
         is_finished = true;
-        White_turn();
-        board.Default_pieces_to_when_die();
         board.pieces.Set_default_values_in_game();
         board.squares.Set_default_values_in_game();
+        board.Default_pieces_set_when_die();
         board.Default_pieces_to_squares();
+        board.pieces.Update_pieces_in_game();
+        White_turn();
 
         is_finished = false;
     }
 
-    public void Next_turn()
+    public void Next_turn(bool update_in_game_list = false)
     {
         this.is_white_turn = !this.is_white_turn;
-        this.board.Rotate();
+        this.board.Rotate(update_in_game_list);
     }
 
     public void White_turn()
@@ -75,7 +77,7 @@ public class Game : MonoBehaviour
 
     public void New_game()
     {
-        Default_values();
+        SceneManager.LoadScene("SampleScene");
     }
 
     public void Close_game()
@@ -92,7 +94,7 @@ public class Game : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        New_game();
+        this.Default_values();
 
         /*
         foreach (ASquare child in transform.GetComponentsInChildren<Square>())

@@ -71,6 +71,31 @@ public abstract class ADirection : MonoBehaviour
         return result;
     }
 
+    public ASquare Forward(APiece piece, int number = 0)
+    {
+        ASquare result = null;
+        if (this != null)
+        {
+            if (this.Check_id_is_up())
+            {
+                result = piece.square.squares.Up(piece.square, number);
+            }
+            else if (this.Check_id_is_down())
+            {
+                result = piece.square.squares.Down(piece.square, number);
+            }
+            else if (this.Check_id_is_left())
+            {
+                result = piece.square.squares.Left(piece.square, number);
+            }
+            else //if (this.Check_id_is_right())
+            {
+                result = piece.square.squares.Right(piece.square, number);
+            }
+        }
+        return result;
+    }
+
     #endregion
 
 }

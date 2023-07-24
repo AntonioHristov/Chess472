@@ -19,7 +19,13 @@ public abstract class APawn : APiece
         this.id_piece = ID_PAWN;
         this.is_en_passant_target = false;
         this.moved = false;
+        if(this.pieces && this.pieces.board && this.pieces.board.game && this.pieces.board.game.boxes)
+        {
+            this.pieces.board.game.boxes.Get_box_promote().Hide();
+            this.pieces.board.game.boxes.Get_box_confirm_promotion().Hide();
+        }
         
+
         //Image img = gameObject.AddComponent(typeof(Image)) as Image;
         //this.gameObject.GetComponent<Image>().sprite = Sprites.Get_white_pawn();
     }
@@ -33,10 +39,6 @@ public abstract class APawn : APiece
 
     public override List<ASquare> Squares_which_this_piece_see()
     {
-
-        var letter = this.square.id_letter;
-        var number = this.square.id_number;
-
         var result = new List<ASquare>();
 
         if (this.Check_is_promoted())
@@ -51,26 +53,26 @@ public abstract class APawn : APiece
 
         if (this.direction.Check_id_is_up())
         {
-            result.Add(this.pieces.board.squares.Up_left(this.square, 1, 1));
-            result.Add(this.pieces.board.squares.Up_right(this.square, 1, 1));
+            result.Add(this.square.Up_left(1, 1));
+            result.Add(this.square.Up_right(1, 1));
         }
         else
         if (this.direction.Check_id_is_down())
         {
-            result.Add(this.pieces.board.squares.Down_left(this.square, 1, 1));
-            result.Add(this.pieces.board.squares.Down_right(this.square, 1, 1));
+            result.Add(this.square.Down_left(1, 1));
+            result.Add(this.square.Down_right(1, 1));
         }
         else
         if (this.direction.Check_id_is_left())
         {
-            result.Add(this.pieces.board.squares.Up_left(this.square, 1, 1));
-            result.Add(this.pieces.board.squares.Down_left(this.square, 1, 1));
+            result.Add(this.square.Up_left(1, 1));
+            result.Add(this.square.Down_left(1, 1));
         }
         else
         //if (this.direction.Check_id_is_right())
         {
-            result.Add(this.pieces.board.squares.Up_right(this.square, 1, 1));
-            result.Add(this.pieces.board.squares.Down_right(this.square, 1, 1));
+            result.Add(this.square.Up_right(1, 1));
+            result.Add(this.square.Down_right(1, 1));
         }
 
 
@@ -87,21 +89,46 @@ public abstract class APawn : APiece
             return result;
         }
 
-        result = this.pieces.board.Add_to_list_if_can_move(result, this, this.direction.Forward(this.square, 1));
+
+        result = this.Add_to_list_if_can_move_without_capture(result, this.direction.Forward(this.square, 1));
 
         if (!this.moved)
         {
-            result = this.pieces.board.Add_to_list_if_can_move(result, this, this.direction.Forward(this.square, 2));
+            result = this.Add_to_list_if_can_move_without_capture(result, this.direction.Forward(this.square, 2));
         }
+
 
         foreach (ASquare square in this.Squares_which_this_piece_see())
         {
-            result = this.pieces.board.Add_to_list_if_can_capture(result, this, square);
+            result = this.Add_to_list_if_can_capture(result, square);
         }
 
         result = this.Add_to_list_if_en_passant(result);
 
         return result;
+    }
+
+    public List<ASquare> Add_to_list_if_can_capture(List<ASquare> list, ASquare square)
+    {
+        if (square != null && (square.piece != null && square.piece.is_white != this.is_white))
+        {
+            list.Add(square);
+        }
+        return list;
+    }
+
+    public bool Check_can_move_without_capture(ASquare square)
+    {
+        return square && square.piece == null;
+    }
+
+    public List<ASquare> Add_to_list_if_can_move_without_capture(List<ASquare> list, ASquare square)
+    {
+        if (this.Check_can_move_without_capture(square))
+        {
+            list.Add(square);
+        }
+        return list;
     }
 
     /// <summary>
@@ -118,13 +145,13 @@ public abstract class APawn : APiece
 
             if (this.direction.Check_id_is_up() || this.direction.Check_id_is_down())
             {
-                posible_squares_piece.Add(this.square.squares.Left(this.square, 1));
-                posible_squares_piece.Add(this.square.squares.Right(this.square, 1));
+                posible_squares_piece.Add(this.square.Left(1));
+                posible_squares_piece.Add(this.square.Right(1));
             }
             else //if (pawn.direction.Check_id_is_left() || pawn.direction.Check_id_is_right())
             {
-                posible_squares_piece.Add(this.square.squares.Up(this.square, 1));
-                posible_squares_piece.Add(this.square.squares.Down(this.square, 1));
+                posible_squares_piece.Add(this.square.Up(1));
+                posible_squares_piece.Add(this.square.Down(1));
             }
             foreach (ASquare square_target_piece in posible_squares_piece)
             {
@@ -200,57 +227,73 @@ public abstract class APawn : APiece
         {
             this.gameObject.AddComponent<White_queen>();
             this.GetComponent<White_queen>().is_promoted = true;
-            this.GetComponent<White_queen>().square = this.square;
+            this.GetComponent<White_queen>().is_alive = true;
+            this.GetComponent<White_queen>().square = this.GetComponent<White_pawn>().square;
             this.GetComponent<White_queen>().square.piece = this.GetComponent<White_queen>();
+            this.GetComponent<White_queen>().when_die = this.GetComponent<White_pawn>().when_die;
         }
         else if (sprite_promotion == Sprites.Get_white_rook())
         {
             this.gameObject.AddComponent<White_rook>();
             this.GetComponent<White_rook>().is_promoted = true;
-            this.GetComponent<White_rook>().square = this.square;
+            this.GetComponent<White_rook>().is_alive = true;
+            this.GetComponent<White_rook>().square = this.GetComponent<White_pawn>().square;
             this.GetComponent<White_rook>().square.piece = this.GetComponent<White_rook>();
+            this.GetComponent<White_rook>().when_die = this.GetComponent<White_pawn>().when_die;
         }
         else if (sprite_promotion == Sprites.Get_white_bishop())
         {
             this.gameObject.AddComponent<White_bishop>();
             this.GetComponent<White_bishop>().is_promoted = true;
-            this.GetComponent<White_bishop>().square = this.square;
+            this.GetComponent<White_bishop>().is_alive = true;
+            this.GetComponent<White_bishop>().square = this.GetComponent<White_pawn>().square;
             this.GetComponent<White_bishop>().square.piece = this.GetComponent<White_bishop>();
+            this.GetComponent<White_bishop>().when_die = this.GetComponent<White_pawn>().when_die;
         }
         else if (sprite_promotion == Sprites.Get_white_knight())
         {
             this.gameObject.AddComponent<White_knight>();
             this.GetComponent<White_knight>().is_promoted = true;
-            this.GetComponent<White_knight>().square = this.square;
+            this.GetComponent<White_knight>().is_alive = true;
+            this.GetComponent<White_knight>().square = this.GetComponent<White_pawn>().square;
             this.GetComponent<White_knight>().square.piece = this.GetComponent<White_knight>();
+            this.GetComponent<White_knight>().when_die = this.GetComponent<White_pawn>().when_die;
         }
         else if (sprite_promotion == Sprites.Get_black_queen())
         {
             this.gameObject.AddComponent<Black_queen>();
             this.GetComponent<Black_queen>().is_promoted = true;
-            this.GetComponent<Black_queen>().square = this.square;
+            this.GetComponent<Black_queen>().is_alive = true;
+            this.GetComponent<Black_queen>().square = this.GetComponent<Black_pawn>().square;
             this.GetComponent<Black_queen>().square.piece = this.GetComponent<Black_queen>();
+            this.GetComponent<Black_queen>().when_die = this.GetComponent<Black_pawn>().when_die;
         }
         else if (sprite_promotion == Sprites.Get_black_rook())
         {
             this.gameObject.AddComponent<Black_rook>();
             this.GetComponent<Black_rook>().is_promoted = true;
-            this.GetComponent<Black_rook>().square = this.square;
+            this.GetComponent<Black_rook>().is_alive = true;
+            this.GetComponent<Black_rook>().square = this.GetComponent<Black_pawn>().square;
             this.GetComponent<Black_rook>().square.piece = this.GetComponent<Black_rook>();
+            this.GetComponent<Black_rook>().when_die = this.GetComponent<Black_pawn>().when_die;
         }
         else if (sprite_promotion == Sprites.Get_black_bishop())
         {
             this.gameObject.AddComponent<Black_bishop>();
             this.GetComponent<Black_bishop>().is_promoted = true;
-            this.GetComponent<Black_bishop>().square = this.square;
+            this.GetComponent<Black_bishop>().is_alive = true;
+            this.GetComponent<Black_bishop>().square = this.GetComponent<Black_pawn>().square;
             this.GetComponent<Black_bishop>().square.piece = this.GetComponent<Black_bishop>();
+            this.GetComponent<Black_bishop>().when_die = this.GetComponent<Black_pawn>().when_die;
         }
         else //if (sprite_promotion == Sprites.Get_black_knight())
         {
             this.gameObject.AddComponent<Black_knight>();
             this.GetComponent<Black_knight>().is_promoted = true;
-            this.GetComponent<Black_knight>().square = this.square;
+            this.GetComponent<Black_knight>().is_alive = true;
+            this.GetComponent<Black_knight>().square = this.GetComponent<Black_pawn>().square;
             this.GetComponent<Black_knight>().square.piece = this.GetComponent<Black_knight>();
+            this.GetComponent<Black_knight>().when_die = this.GetComponent<Black_pawn>().when_die;
         }
 
         this.GetComponent<Image>().sprite = sprite_promotion;
@@ -260,6 +303,8 @@ public abstract class APawn : APiece
 
     public void Promote(Sprite sprite_promotion)
     {
+        this.Add_component_promotion(sprite_promotion);
+
         if (this.is_white)
         {
             Destroy(this.gameObject.GetComponent<White_pawn>());
@@ -268,8 +313,6 @@ public abstract class APawn : APiece
         {
             Destroy(this.gameObject.GetComponent<Black_pawn>());
         }
-
-        this.Add_component_promotion(sprite_promotion);
     }
 
     public bool Check_is_promoted()

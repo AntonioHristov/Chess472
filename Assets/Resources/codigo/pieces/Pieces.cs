@@ -21,6 +21,7 @@ public class Pieces : MonoBehaviour
         {
             foreach (APiece piece in pieces_list)
             {
+                Debug.Log(piece);
                 Common.Rotate_z(piece.gameObject);
             }
         }
@@ -263,11 +264,16 @@ public class Pieces : MonoBehaviour
         return this.Set_blacks(this.in_game);
     }
 
-    public void Set_default_values(APiece[] pieces_list)
+    public void Set_default_values(APiece[] pieces_list, bool update_in_game_list = false)
     {
-        this.Set_default_values(this.Get_pawns(pieces_list));
-        //this.Set_default_values(this.Get_kings(pieces_list));
-        //this.Set_default_values(this.Get_rooks(pieces_list));
+        foreach (APiece piece in pieces_list)
+        {
+            piece.Default_values();
+        }
+        if (update_in_game_list)
+        {
+            this.Update_pieces_in_game();
+        }
     }
 
     public void Set_default_values_in_game(bool update_in_game_list = false)
@@ -276,12 +282,49 @@ public class Pieces : MonoBehaviour
         {
             this.Update_pieces_in_game();
         }
-        this.Set_default_values(this.in_game);
+        this.Set_default_values(this.in_game, update_in_game_list);
     }
 
-    public void Update_pieces_in_game()
+    public void Update_pieces_in_game(bool counting_pawns_promoted = true)
     {
-        this.in_game = this.GetComponentsInChildren<APiece>();
+        if(counting_pawns_promoted)
+        {
+            this.in_game = this.GetComponentsInChildren<APiece>();
+        }
+        else
+        {
+            var result = new List<APiece>();
+
+            foreach (APiece piece in this.GetComponentsInChildren<APiece>())
+            {
+                if (
+                    (piece.GetComponent<AQueen>() && piece.GetComponent<AQueen>().is_promoted)
+                    ||
+                    (piece.GetComponent<ARook>() && piece.GetComponent<ARook>().is_promoted)
+                    ||
+                    (piece.GetComponent<ABishop>() && piece.GetComponent<ABishop>().is_promoted)
+                    ||
+                    (piece.GetComponent<AKnight>() && piece.GetComponent<AKnight>().is_promoted)                 
+                    )
+                {
+                    if(piece.is_white)
+                    {
+                        result.Add(piece.GetComponent<White_pawn>());
+                    }
+                    else
+                    {
+                        result.Add(piece.GetComponent<Black_pawn>());
+                    }
+                }
+                else
+                {
+                    result.Add(piece);
+                }
+            }
+            this.in_game = result.ToArray();
+        }
+
+            
     }
 
     #endregion

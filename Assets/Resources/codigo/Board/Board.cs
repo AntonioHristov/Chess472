@@ -13,10 +13,10 @@ public class Board : MonoBehaviour
     /// Rotate or not depending on the turn of the game
     /// This method rotate the board and all pieces in game
     /// </summary>
-    public void Rotate(bool update_in_game_list = false)
+    public void Rotate()
     {
         Common.Rotate_z(this.gameObject);
-        this.pieces.Rotate_in_game(update_in_game_list);
+        this.pieces.Rotate_in_game();
     }
 
     /// <summary>
@@ -70,9 +70,9 @@ public class Board : MonoBehaviour
         return list;
     }
     
-    public void Default_pieces_set_when_die(bool update_in_game_list = false)
+    public void Default_pieces_set_when_die()
     {
-        var all_pieces = this.pieces.Get_All_in_game(update_in_game_list);
+        var all_pieces = this.pieces.Get_All_in_game();
         var when_die = squares.when_die;
 
         if(all_pieces.Length == when_die.Length)

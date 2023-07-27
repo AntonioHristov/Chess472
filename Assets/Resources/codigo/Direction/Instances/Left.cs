@@ -4,10 +4,28 @@ using UnityEngine;
 
 public class Left : ADirection
 {
-    public override int id_direction { get; set; }
-
-    void Awake()
+    /// <summary>
+    /// Get Square forward from square, number times
+    /// </summary>
+    /// <param name="square"></param>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    /// 
+    public override ASquare Forward(ASquare square, int number = 0)
     {
-        this.id_direction = ID_LEFT;
+        if (!square) { return null; }
+        return square.squares.Left(square, number);
+    }
+
+    /// <summary>
+    /// Get Square forward from square's piece, number times
+    /// </summary>
+    /// <param name="piece"></param>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    public override ASquare Forward(APiece piece, int number = 0)
+    {
+        if (!piece) { return null; }
+        return piece.square.squares.Left(piece.square, number);
     }
 }

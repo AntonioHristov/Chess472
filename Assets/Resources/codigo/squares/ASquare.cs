@@ -90,6 +90,17 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         return this.squares.Up(this,number);
     }
 
+    // Test this with rook
+    public ASquare[] Up()
+    {
+        var result = new List<ASquare>();
+        for(int count=1; this.Up(count) != null; count++)
+        {
+            result.Add(this.Up(count));
+        }
+        return result.ToArray();
+    }
+
     public ASquare Down(int number)
     {
         return this.squares.Down(this, number);
@@ -230,14 +241,14 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
                 if (! piece_clicked.GetComponent<APawn>().Try_capture_en_passant(this) )
                 {
                     // All pawns in game are not en passant target. This is because we want a pawn which is an en passant target only the first chance and not more
-                    this.squares.board.pieces.Set_no_targets_en_passant_in_game(true);
+                    this.squares.board.pieces.Set_no_targets_en_passant_in_game();
 
                     // if pawn's first move and go 2 squares, is a target for en passant, if not not.
                     piece_clicked.GetComponent<APawn>().Is_en_passant_target(this);
 
                     piece_clicked.GetComponent<APawn>().moved = true;
 
-                    if ( piece_clicked.GetComponent<APawn>().direction.Forward(this, -3))//-7
+                    if ( piece_clicked.GetComponent<APawn>().direction.Forward(this, -7))//-7
                     {
                         piece_clicked.GetComponent<APawn>().Open_box_promotion();
                     }
@@ -247,7 +258,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
 
 
             squares.board.Piece_to_square(piece_clicked, this);
-            this.squares.board.game.Next_turn(true);
+            this.squares.board.game.Next_turn();
         }
 
 

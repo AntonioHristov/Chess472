@@ -21,18 +21,13 @@ public class Pieces : MonoBehaviour
         {
             foreach (APiece piece in pieces_list)
             {
-                Debug.Log(piece);
                 Common.Rotate_z(piece.gameObject);
             }
         }
     }
 
-    public void Rotate_in_game(bool update_in_game_list = false)
+    public void Rotate_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         this.Rotate(this.in_game);
     }
 
@@ -47,23 +42,15 @@ public class Pieces : MonoBehaviour
         }
     }
 
-    public void Rotate_in_game_default(bool update_in_game_list = false)
+    public void Rotate_in_game_default()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         Rotate_default(this.in_game);
     }
 
     #endregion
 
-    public APiece[] Get_All_in_game(bool update_in_game_list = false)
+    public APiece[] Get_All_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.in_game;
     }
 
@@ -88,12 +75,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APiece[] Get_alives_in_game(bool update_in_game_list = false)
+    public APiece[] Get_alives_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_alives(this.in_game);
     }
 
@@ -111,12 +94,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APiece[] Set_alives_in_game(bool update_in_game_list = false)
+    public APiece[] Set_alives_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Set_alives(this.in_game);
     }
 
@@ -136,12 +115,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APiece[] Get_dies_in_game(bool update_in_game_list = false)
+    public APiece[] Get_dies_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_dies(this.in_game);
     }
 
@@ -159,12 +134,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APiece[] Set_dies_in_game(bool update_in_game_list = false)
+    public APiece[] Set_dies_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Set_dies(this.in_game);
     }
 
@@ -184,12 +155,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APiece[] Get_whites_in_game(bool update_in_game_list = false)
+    public APiece[] Get_whites_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_whites(this.in_game);
     }
 
@@ -207,12 +174,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APiece[] Set_whites_in_game(bool update_in_game_list = false)
+    public APiece[] Set_whites_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Set_whites(this.in_game);
     }
 
@@ -232,12 +195,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APiece[] Get_blacks_in_game(bool update_in_game_list = false)
+    public APiece[] Get_blacks_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_blacks(this.in_game);
     }
 
@@ -255,76 +214,27 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APiece[] Set_blacks_in_game(bool update_in_game_list = false)
+    public APiece[] Set_blacks_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Set_blacks(this.in_game);
     }
 
-    public void Set_default_values(APiece[] pieces_list, bool update_in_game_list = false)
+    public void Set_default_values(APiece[] pieces_list)
     {
         foreach (APiece piece in pieces_list)
         {
             piece.Default_values();
         }
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
     }
 
-    public void Set_default_values_in_game(bool update_in_game_list = false)
+    public void Set_default_values_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
-        this.Set_default_values(this.in_game, update_in_game_list);
+        this.Set_default_values(this.in_game);
     }
 
-    public void Update_pieces_in_game(bool counting_pawns_promoted = true)
+    public void Update_pieces_in_game()
     {
-        if(counting_pawns_promoted)
-        {
-            this.in_game = this.GetComponentsInChildren<APiece>();
-        }
-        else
-        {
-            var result = new List<APiece>();
-
-            foreach (APiece piece in this.GetComponentsInChildren<APiece>())
-            {
-                if (
-                    (piece.GetComponent<AQueen>() && piece.GetComponent<AQueen>().is_promoted)
-                    ||
-                    (piece.GetComponent<ARook>() && piece.GetComponent<ARook>().is_promoted)
-                    ||
-                    (piece.GetComponent<ABishop>() && piece.GetComponent<ABishop>().is_promoted)
-                    ||
-                    (piece.GetComponent<AKnight>() && piece.GetComponent<AKnight>().is_promoted)                 
-                    )
-                {
-                    if(piece.is_white)
-                    {
-                        result.Add(piece.GetComponent<White_pawn>());
-                    }
-                    else
-                    {
-                        result.Add(piece.GetComponent<Black_pawn>());
-                    }
-                }
-                else
-                {
-                    result.Add(piece);
-                }
-            }
-            this.in_game = result.ToArray();
-        }
-
-            
+        this.in_game = this.GetComponentsInChildren<APiece>();     
     }
 
     #endregion
@@ -346,12 +256,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APawn[] Get_pawns_in_game(bool update_in_game_list = false)
-    {
-        if(update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }      
+    public APawn[] Get_pawns_in_game()
+    {   
         return this.Get_pawns(this.in_game);
     }
 
@@ -371,12 +277,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APawn[] Get_targets_en_passant_in_game(bool update_in_game_list = false)
+    public APawn[] Get_targets_en_passant_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_targets_en_passant(this.Get_pawns_in_game());
     }
 
@@ -396,12 +298,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APawn[] Get_no_targets_en_passant_in_game(bool update_in_game_list = false)
+    public APawn[] Get_no_targets_en_passant_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_no_targets_en_passant(this.Get_pawns_in_game());
     }
 
@@ -419,12 +317,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APawn[] Set_targets_en_passant_in_game(bool update_in_game_list = false)
+    public APawn[] Set_targets_en_passant_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Set_targets_en_passant(this.Get_pawns_in_game());
     }
 
@@ -442,12 +336,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APawn[] Set_no_targets_en_passant_in_game(bool update_in_game_list = false)
+    public APawn[] Set_no_targets_en_passant_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Set_no_targets_en_passant(this.Get_pawns_in_game());
     }
 
@@ -467,12 +357,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APawn[] Get_moved_in_game(bool update_in_game_list = false)
+    public APawn[] Get_moved_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_moved(this.Get_pawns_in_game());
     }
 
@@ -492,12 +378,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APawn[] Get_no_moved_in_game(bool update_in_game_list = false)
+    public APawn[] Get_no_moved_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_no_moved(this.Get_pawns_in_game());
     }
 
@@ -515,12 +397,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APawn[] Set_moved_in_game(bool update_in_game_list = false)
+    public APawn[] Set_moved_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Set_moved(this.Get_pawns_in_game());
     }
 
@@ -538,12 +416,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public APawn[] Set_no_moved_in_game(bool update_in_game_list = false)
+    public APawn[] Set_no_moved_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Set_no_moved(this.Get_pawns_in_game());
     }
 
@@ -581,12 +455,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public AKnight[] Get_Knights_in_game(bool update_in_game_list = false)
+    public AKnight[] Get_Knights_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_knights(this.in_game);
     }
 
@@ -609,12 +479,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public ABishop[] Get_bishops_in_game(bool update_in_game_list = false)
+    public ABishop[] Get_bishops_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_bishops(this.in_game);
     }
 
@@ -637,12 +503,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public AKing[] Get_Kings_in_game(bool update_in_game_list = false)
+    public AKing[] Get_Kings_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_kings(this.in_game);
     }
 
@@ -665,12 +527,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public ARook[] Get_rooks_in_game(bool update_in_game_list = false)
+    public ARook[] Get_rooks_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_rooks(this.in_game);
     }
 
@@ -694,12 +552,8 @@ public class Pieces : MonoBehaviour
         return result.ToArray();
     }
 
-    public AQueen[] Get_queens_in_game(bool update_in_game_list = false)
+    public AQueen[] Get_queens_in_game()
     {
-        if (update_in_game_list)
-        {
-            this.Update_pieces_in_game();
-        }
         return this.Get_queens(this.in_game);
     }
 

@@ -33,10 +33,10 @@ public class Game : MonoBehaviour
         is_finished = false;
     }
 
-    public void Next_turn(bool update_in_game_list = false)
+    public void Next_turn()
     {
         this.is_white_turn = !this.is_white_turn;
-        this.board.Rotate(update_in_game_list);
+        this.board.Rotate();
     }
 
     public void White_turn()

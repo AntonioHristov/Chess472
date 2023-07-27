@@ -11,13 +11,6 @@ public class Black_pawn : APawn
     {
         base.Awake();
         this.is_white = false;
-        if (this.gameObject.GetComponent<ADirection>())
-        {
-            this.direction = this.gameObject.GetComponent<ADirection>();
-        }
-        else if (!direction && !this.gameObject.GetComponent<ADirection>())
-        {
-            this.direction = this.gameObject.AddComponent(typeof(Down)) as Down;
-        }
+        this.direction = new GameObject().AddComponent<Down>();
     }
 }

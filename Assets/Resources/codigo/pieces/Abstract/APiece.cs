@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public abstract class APiece : MonoBehaviour
 {
@@ -81,6 +82,15 @@ public abstract class APiece : MonoBehaviour
     { this.is_alive = false; this.GetComponentInParent<Board>().Piece_to_square(this, when_die); }
     public void Revive(ASquare square)
     { this.is_alive = true; this.GetComponentInParent<Board>().Piece_to_square(this, square); }
+
+    public void Set_sprite(Sprite sprite)
+    {
+        if (!this.gameObject.GetComponent<Image>())
+        {
+            Image img = gameObject.AddComponent(typeof(Image)) as Image;
+        }
+        this.gameObject.GetComponent<Image>().sprite = sprite;
+    }
     #endregion
 
     public void Awake()

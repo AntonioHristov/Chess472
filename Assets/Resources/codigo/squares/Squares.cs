@@ -46,7 +46,6 @@ public class Squares : MonoBehaviour
     {
         return this.Get_square_in_game(square.id_letter, square.id_number + number);
     }
-    // Create UP which is all squares up
 
     public ASquare Down(ASquare square, int number)
     {

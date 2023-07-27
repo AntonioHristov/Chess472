@@ -15,7 +15,6 @@ public abstract class APawn : APiece
     new public void Awake()
     {
         base.Awake();
-        //this.is_white = true;
         this.id_piece = ID_PAWN;
         this.is_en_passant_target = false;
         this.moved = false;
@@ -35,7 +34,10 @@ public abstract class APawn : APiece
 
     }
 
-
+    public void Set_direction(ADirection direction)
+    {
+        this.direction = direction;
+    }
 
     public override List<ASquare> Squares_which_this_piece_see()
     {
@@ -51,25 +53,25 @@ public abstract class APawn : APiece
             return result;
         }
 
-        if (this.direction.Check_id_is_up())
+        if (this.direction.GetComponent<Up>())
         {
             result.Add(this.square.Up_left(1, 1));
             result.Add(this.square.Up_right(1, 1));
         }
         else
-        if (this.direction.Check_id_is_down())
+        if (this.direction.GetComponent<Down>())
         {
             result.Add(this.square.Down_left(1, 1));
             result.Add(this.square.Down_right(1, 1));
         }
         else
-        if (this.direction.Check_id_is_left())
+        if (this.direction.GetComponent<Left>())
         {
             result.Add(this.square.Up_left(1, 1));
             result.Add(this.square.Down_left(1, 1));
         }
         else
-        //if (this.direction.Check_id_is_right())
+        //if (this.direction.GetComponent<Right>())
         {
             result.Add(this.square.Up_right(1, 1));
             result.Add(this.square.Down_right(1, 1));
@@ -92,7 +94,7 @@ public abstract class APawn : APiece
 
         result = this.Add_to_list_if_can_move_without_capture(result, this.direction.Forward(this.square, 1));
 
-        if (!this.moved)
+        if (!this.moved && this.Check_can_move_without_capture(this.direction.Forward(this.square, 1)) )
         {
             result = this.Add_to_list_if_can_move_without_capture(result, this.direction.Forward(this.square, 2));
         }
@@ -143,12 +145,12 @@ public abstract class APawn : APiece
         {
             var posible_squares_piece = new List<ASquare>();
 
-            if (this.direction.Check_id_is_up() || this.direction.Check_id_is_down())
+            if (this.direction.GetComponent<Up>() || this.direction.GetComponent<Down>())
             {
                 posible_squares_piece.Add(this.square.Left(1));
                 posible_squares_piece.Add(this.square.Right(1));
             }
-            else //if (pawn.direction.Check_id_is_left() || pawn.direction.Check_id_is_right())
+            else //if (pawn.direction.GetComponent<Left>() || pawn.direction.GetComponent<Right>())
             {
                 posible_squares_piece.Add(this.square.Up(1));
                 posible_squares_piece.Add(this.square.Down(1));
@@ -307,12 +309,13 @@ public abstract class APawn : APiece
 
         if (this.is_white)
         {
-            Destroy(this.gameObject.GetComponent<White_pawn>());
+            DestroyImmediate(this.gameObject.GetComponent<White_pawn>());
         }
         else
         {
-            Destroy(this.gameObject.GetComponent<Black_pawn>());
+            DestroyImmediate(this.gameObject.GetComponent<Black_pawn>());
         }
+        this.pieces.Update_pieces_in_game();
     }
 
     public bool Check_is_promoted()

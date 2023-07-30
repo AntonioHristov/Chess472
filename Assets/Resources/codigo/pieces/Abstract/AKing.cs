@@ -4,13 +4,9 @@ using UnityEngine;
 
 public abstract class AKing : APiece
 {
-    public override int id_piece { get; set; }
-
-
     new public void Awake()
     {
         base.Awake();
-        this.id_piece = ID_KING;
     }
 
     public override List<ASquare> Squares_which_this_piece_see()

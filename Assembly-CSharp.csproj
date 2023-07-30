@@ -103,6 +103,8 @@
     <Compile Include="Assets\Resources\codigo\Pieces\black\Black_queen.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\black\Black_rook.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\Pieces.cs" />
+    <Compile Include="Assets\Resources\codigo\Pieces\Traits\TDirection.cs" />
+    <Compile Include="Assets\Resources\codigo\Pieces\Traits\TMoved.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\white\White_bishop.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\white\White_king.cs" />
     <Compile Include="Assets\Resources\codigo\Pieces\white\White_knight.cs" />

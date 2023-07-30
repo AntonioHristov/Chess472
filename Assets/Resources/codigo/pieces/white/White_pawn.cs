@@ -14,12 +14,7 @@ public class White_pawn : APawn
     {
         base.Awake();
         this.is_white = true;
-
-        this.direction = new GameObject().AddComponent<Up>();
-
-        // Create Up, etc instances and populate it in this.direction
-        
-        //base.Set_direction(Up);
+        TDirection_methods.Get_Up(this);
         base.Set_sprite(Sprites.Get_white_pawn());
     }
 }

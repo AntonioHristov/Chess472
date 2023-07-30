@@ -4,29 +4,25 @@ using UnityEngine;
 
 public abstract class AQueen : ACan_be_promotion
 {
-    public override int id_piece { get; set; }
-
     new public void Awake()
     {
         base.Awake();
-        this.id_piece = ID_QUEEN;
     }
 
     public override List<ASquare> Squares_which_this_piece_see()
     {
-        var letter = this.square.id_letter;
-        var number = this.square.id_number;
-
         var result = new List<ASquare>();
-        return result;
-    }
 
-    public override List<ASquare> Posible_moves()
-    {
-        var letter = this.square.id_letter;
-        var number = this.square.id_number;
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Up());
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Down());
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Left());
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Right());
 
-        var result = new List<ASquare>();
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Up_left());
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Up_right());
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Down_left());
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Down_right());
+
         return result;
     }
 

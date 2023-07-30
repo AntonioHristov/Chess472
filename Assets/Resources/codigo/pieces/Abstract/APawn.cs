@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class APawn : APiece
+public abstract class APawn : APiece, TMoved, TDirection
 {
     public abstract ADirection direction { get; set; }
-    public override int id_piece { get; set; } // = ID_PAWN; etc
     public bool is_en_passant_target { get; set; }
     public bool moved { get; set; }
 
@@ -15,7 +14,6 @@ public abstract class APawn : APiece
     new public void Awake()
     {
         base.Awake();
-        this.id_piece = ID_PAWN;
         this.is_en_passant_target = false;
         this.moved = false;
         if(this.pieces && this.pieces.board && this.pieces.board.game && this.pieces.board.game.boxes)
@@ -23,10 +21,6 @@ public abstract class APawn : APiece
             this.pieces.board.game.boxes.Get_box_promote().Hide();
             this.pieces.board.game.boxes.Get_box_confirm_promotion().Hide();
         }
-        
-
-        //Image img = gameObject.AddComponent(typeof(Image)) as Image;
-        //this.gameObject.GetComponent<Image>().sprite = Sprites.Get_white_pawn();
     }
 
     public void Start()
@@ -34,19 +28,9 @@ public abstract class APawn : APiece
 
     }
 
-    public void Set_direction(ADirection direction)
-    {
-        this.direction = direction;
-    }
-
     public override List<ASquare> Squares_which_this_piece_see()
     {
         var result = new List<ASquare>();
-
-        if (this.Check_is_promoted())
-        {
-            return result;
-        }
 
         if ( this.direction == null)
         {
@@ -85,12 +69,6 @@ public abstract class APawn : APiece
     public override List<ASquare> Posible_moves()
     {    
         var result = new List<ASquare>();
-
-        if (this.Check_is_promoted())
-        {
-            return result;
-        }
-
 
         result = this.Add_to_list_if_can_move_without_capture(result, this.direction.Forward(this.square, 1));
 
@@ -141,7 +119,7 @@ public abstract class APawn : APiece
     /// <returns></returns>
     public List<ASquare> Add_to_list_if_en_passant(List<ASquare> list)
     {
-        if (this && !this.Check_is_promoted() && this.square && this.direction)
+        if (this.square && this.direction)
         {
             var posible_squares_piece = new List<ASquare>();
 
@@ -177,7 +155,7 @@ public abstract class APawn : APiece
         // if move chosen is en passant, capture the pawn target
         if
             (
-            !this.Check_is_promoted() && square_destination && this.direction &&
+            square_destination && this.direction &&
             this.direction.Forward(square_destination, -1) &&
             this.direction.Forward(square_destination, -1).piece &&
             this.direction.Forward(square_destination, -1).piece.GetComponent<APawn>() &&
@@ -196,7 +174,7 @@ public abstract class APawn : APiece
     public bool Is_en_passant_target(ASquare square_destination)
     {
         // if pawn's first move and go 2 squares, is a target for en passant
-        if (!this.Check_is_promoted() && square_destination && !this.moved && this.direction.Forward(this.square, 2) == square_destination)
+        if (square_destination && !this.moved && this.direction.Forward(this.square, 2) == square_destination)
         {
             this.is_en_passant_target = true;
         }
@@ -316,11 +294,6 @@ public abstract class APawn : APiece
             DestroyImmediate(this.gameObject.GetComponent<Black_pawn>());
         }
         this.pieces.Update_pieces_in_game();
-    }
-
-    public bool Check_is_promoted()
-    {
-        return this.GetComponent<AQueen>() || this.GetComponent<ARook>() || this.GetComponent<ABishop>() || this.GetComponent<AKnight>();
     }
 
 

@@ -54,8 +54,20 @@ public class Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Warning, by general pieces like knight, bishop...
-    /// NOT FOR PAWNS, because in that case is not exactly the same thing.
+    /// Can move or capture
+    /// </summary>
+    /// <param name="piece"></param>
+    /// <param name="square"></param>
+    /// <returns></returns>
+    public bool Check_can_move(APiece piece, ASquare square)
+    {
+        return piece != null && square != null && (square.piece == null || square.piece.is_white != piece.is_white);
+    }
+
+    /// <summary>
+    /// Warning, by general pieces like knight, bishop, king, ... 
+    /// NOT FOR PAWNS, because in that case is not exactly the same thing
+    /// (can move and not can capture, etc).
     /// </summary>
     /// <param name="list"></param>
     /// <param name="piece"></param>
@@ -63,13 +75,63 @@ public class Board : MonoBehaviour
     /// <returns></returns>
     public List<ASquare> Add_to_list_if_can_move(List<ASquare> list, APiece piece, ASquare square)
     {
-        if (piece != null && square != null && (square.piece == null || square.piece.is_white != piece.is_white) )
+        if (list != null && this.Check_can_move(piece,square) )
         {
             list.Add(square);
         }
         return list;
     }
-    
+
+    /// <summary>
+    /// Warning, by general pieces like knight, bishop, king, ... 
+    /// NOT FOR PAWNS, because in that case is not exactly the same thing
+    /// (can move and not can capture, etc).
+    /// </summary>
+    /// <param name="list"></param>
+    /// <param name="piece"></param>
+    /// <param name="squares"></param>
+    /// <returns></returns>
+    public List<ASquare> Add_to_list_if_can_move(List<ASquare> list, APiece piece, ASquare[] squares)
+    {
+        if(list != null && piece != null && squares != null)
+        {
+            foreach (ASquare square in squares)
+            {
+                list = this.Add_to_list_if_can_move(list, piece, square);
+            }
+        }
+        return list;
+    }
+
+
+
+    #region Large moves
+
+    /// <summary>
+    /// With large moves like bishops, rooks, queens
+    /// </summary>
+    /// <param name="list"></param>
+    /// <param name="piece"></param>
+    /// <param name="squares"></param>
+    /// <returns></returns>
+    public List<ASquare> Add_to_list_if_can_see_without_jump(List<ASquare> list, APiece piece, ASquare[] squares)
+    {
+        if (list != null && piece != null && squares != null)
+        {
+            foreach (ASquare square in squares)
+            {
+                list.Add(square);
+                if (square.piece)
+                {
+                    return list;
+                }
+            }
+        }
+        return list;
+    }
+
+    #endregion
+
     public void Default_pieces_set_when_die()
     {
         var all_pieces = this.pieces.Get_All_in_game();

@@ -4,6 +4,24 @@ using UnityEngine;
 
 public class Up : ADirection
 {
+    public static Up Instance
+    {
+        get
+        {
+            if (FindObjectOfType<Up>())
+            {
+                return FindObjectOfType<Up>();
+            }
+            else
+            {
+                var new_instance = new GameObject().AddComponent<Up>();
+                new_instance.name = new_instance.GetType().Name;
+                return new_instance;
+            }
+        }
+    }
+
+
     /// <summary>
     /// Get Square forward from square, number times
     /// </summary>

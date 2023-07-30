@@ -82,7 +82,6 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
     }
 
 
-
     #region Direction Change Square
 
     public ASquare Up(int number)
@@ -90,7 +89,6 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         return this.squares.Up(this,number);
     }
 
-    // Test this with rook
     public ASquare[] Up()
     {
         var result = new List<ASquare>();
@@ -106,9 +104,29 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         return this.squares.Down(this, number);
     }
 
+    public ASquare[] Down()
+    {
+        var result = new List<ASquare>();
+        for (int count = 1; this.Down(count) != null; count++)
+        {
+            result.Add(this.Down(count));
+        }
+        return result.ToArray();
+    }
+
     public ASquare Left(int number)
     {
         return this.squares.Left(this, number);
+    }
+
+    public ASquare[] Left()
+    {
+        var result = new List<ASquare>();
+        for (int count = 1; this.Left(count) != null; count++)
+        {
+            result.Add(this.Left(count));
+        }
+        return result.ToArray();
     }
 
     public ASquare Right(int number)
@@ -116,9 +134,29 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         return this.squares.Right(this, number);
     }
 
+    public ASquare[] Right()
+    {
+        var result = new List<ASquare>();
+        for (int count = 1; this.Right(count) != null; count++)
+        {
+            result.Add(this.Right(count));
+        }
+        return result.ToArray();
+    }
+
     public ASquare Up_left(int number_up, int number_left)
     {
         return this.squares.Up_left(this, number_up, number_left);
+    }
+
+    public ASquare[] Up_left()
+    {
+        var result = new List<ASquare>();
+        for (int count = 1; this.Up_left(count, count) != null; count++)
+        {
+            result.Add(this.Up_left(count, count));
+        }
+        return result.ToArray();
     }
 
     public ASquare Up_right(int number_up, int number_right)
@@ -126,14 +164,44 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         return this.squares.Up_right(this, number_up, number_right);
     }
 
+    public ASquare[] Up_right()
+    {
+        var result = new List<ASquare>();
+        for (int count = 1; this.Up_right(count, count) != null; count++)
+        {
+            result.Add(this.Up_right(count, count));
+        }
+        return result.ToArray();
+    }
+
     public ASquare Down_left(int number_down, int number_left)
     {
         return this.squares.Down_left(this, number_down, number_left);
     }
 
+    public ASquare[] Down_left()
+    {
+        var result = new List<ASquare>();
+        for (int count = 1; this.Down_left(count, count) != null; count++)
+        {
+            result.Add(this.Down_left(count, count));
+        }
+        return result.ToArray();
+    }
+
     public ASquare Down_right(int number_down, int number_right)
     {
         return this.squares.Down_right(this, number_down, number_right);
+    }
+
+    public ASquare[] Down_right()
+    {
+        var result = new List<ASquare>();
+        for (int count = 1; this.Down_right(count, count) != null; count++)
+        {
+            result.Add(this.Down_right(count, count));
+        }
+        return result.ToArray();
     }
 
     #endregion
@@ -235,7 +303,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
             this.squares.Disable(squares.clicked.piece.Posible_moves().ToArray());
             this.squares.clicked.Unclick();
 
-            if(piece_clicked.GetComponent<APawn>() && !piece_clicked.GetComponent<APawn>().Check_is_promoted() )
+            if(piece_clicked.GetComponent<APawn>() )
             {
                 // Trying to capture the target piece en passant , if its not been able to do it, then...
                 if (! piece_clicked.GetComponent<APawn>().Try_capture_en_passant(this) )
@@ -246,8 +314,6 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
                     // if pawn's first move and go 2 squares, is a target for en passant, if not not.
                     piece_clicked.GetComponent<APawn>().Is_en_passant_target(this);
 
-                    piece_clicked.GetComponent<APawn>().moved = true;
-
                     if ( piece_clicked.GetComponent<APawn>().direction.Forward(this, -7))//-7
                     {
                         piece_clicked.GetComponent<APawn>().Open_box_promotion();
@@ -255,6 +321,11 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
                 }
             }
 
+
+            if( typeof(TMoved).IsAssignableFrom(piece_clicked.GetType()) )
+            {
+                piece_clicked.GetComponent<TMoved>().moved = true;
+            }
 
 
             squares.board.Piece_to_square(piece_clicked, this);

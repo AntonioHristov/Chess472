@@ -42,6 +42,18 @@ public class Squares : MonoBehaviour
         this.in_game = new_squares_in_game;
     }
 
+    public List<ASquare> Add_to_list_squares(List<ASquare> list, ASquare[] squares)
+    {
+        if (list != null && squares != null)
+        {
+            foreach (ASquare square in squares)
+            {
+                list.Add(square);
+            }
+        }
+        return list;
+    }
+
     public ASquare Up(ASquare square, int number)
     {
         return this.Get_square_in_game(square.id_letter, square.id_number + number);

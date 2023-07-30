@@ -11,6 +11,7 @@ public class Black_pawn : APawn
     {
         base.Awake();
         this.is_white = false;
-        this.direction = new GameObject().AddComponent<Down>();
+        TDirection_methods.Get_Down(this);
+        base.Set_sprite(Sprites.Get_black_pawn());
     }
 }

@@ -219,6 +219,94 @@ public class Pieces : MonoBehaviour
         return this.Set_blacks(this.in_game);
     }
 
+    public APiece[] Get_moved(APiece[] pieces)
+    {
+        var result = new List<APiece>();
+        if (pieces != null)
+        {
+            foreach (APiece piece in pieces)
+            {
+                if ( typeof(TMoved).IsAssignableFrom(piece.GetType()) && piece.GetComponent<TMoved>().moved )
+                {
+                    result.Add(piece);
+                }
+                result.Add(piece);
+            }
+        }
+        return result.ToArray();
+    }
+
+    public APiece[] Get_moved_in_game()
+    {
+        return this.Get_moved(this.Get_pawns_in_game());
+    }
+
+    public APiece[] Get_no_moved(APiece[] pieces)
+    {
+        var result = new List<APiece>();
+        if (pieces != null)
+        {
+            foreach (APiece piece in pieces)
+            {
+                if (typeof(TMoved).IsAssignableFrom(piece.GetType()) && !piece.GetComponent<TMoved>().moved)
+                {
+                    result.Add(piece);
+                }
+                result.Add(piece);
+            }
+        }
+        return result.ToArray();
+    }
+
+    public APiece[] Get_no_moved_in_game()
+    {
+        return this.Get_no_moved(this.Get_pawns_in_game());
+    }
+
+    public APiece[] Set_moved(APiece[] pieces)
+    {
+        var result = new List<APiece>();
+        if (pieces != null)
+        {
+            foreach (APiece piece in pieces)
+            {
+                if (typeof(TMoved).IsAssignableFrom(piece.GetType()))
+                {
+                    piece.GetComponent<TMoved>().moved = true;
+                }
+                result.Add(piece);
+            }
+        }
+        return result.ToArray();
+    }
+
+    public APiece[] Set_moved_in_game()
+    {
+        return this.Set_moved(this.Get_pawns_in_game());
+    }
+
+    public APiece[] Set_no_moved(APiece[] pieces)
+    {
+        var result = new List<APiece>();
+        if (pieces != null)
+        {
+            foreach (APiece piece in pieces)
+            {
+                if (typeof(TMoved).IsAssignableFrom(piece.GetType()))
+                {
+                    piece.GetComponent<TMoved>().moved = false;
+                }
+                result.Add(piece);
+            }
+        }
+        return result.ToArray();
+    }
+
+    public APiece[] Set_no_moved_in_game()
+    {
+        return this.Set_no_moved(this.Get_pawns_in_game());
+    }
+
     public void Set_default_values(APiece[] pieces_list)
     {
         foreach (APiece piece in pieces_list)
@@ -339,86 +427,6 @@ public class Pieces : MonoBehaviour
     public APawn[] Set_no_targets_en_passant_in_game()
     {
         return this.Set_no_targets_en_passant(this.Get_pawns_in_game());
-    }
-
-    public APawn[] Get_moved(APawn[] pawns_list)
-    {
-        var result = new List<APawn>();
-        if (pawns_list != null)
-        {
-            foreach (APawn pawn in pawns_list)
-            {
-                if (pawn.moved)
-                {
-                    result.Add(pawn);
-                }
-            }
-        }
-        return result.ToArray();
-    }
-
-    public APawn[] Get_moved_in_game()
-    {
-        return this.Get_moved(this.Get_pawns_in_game());
-    }
-
-    public APawn[] Get_no_moved(APawn[] pawns_list)
-    {
-        var result = new List<APawn>();
-        if (pawns_list != null)
-        {
-            foreach (APawn pawn in pawns_list)
-            {
-                if (!pawn.moved)
-                {
-                    result.Add(pawn);
-                }
-            }
-        }
-        return result.ToArray();
-    }
-
-    public APawn[] Get_no_moved_in_game()
-    {
-        return this.Get_no_moved(this.Get_pawns_in_game());
-    }
-
-    public APawn[] Set_moved(APawn[] pawns_list)
-    {
-        var result = new List<APawn>();
-        if (pawns_list != null)
-        {
-            foreach (APawn pawn in pawns_list)
-            {
-                pawn.moved = true;
-                result.Add(pawn);
-            }
-        }
-        return result.ToArray();
-    }
-
-    public APawn[] Set_moved_in_game()
-    {
-        return this.Set_moved(this.Get_pawns_in_game());
-    }
-
-    public APawn[] Set_no_moved(APawn[] pawns_list)
-    {
-        var result = new List<APawn>();
-        if (pawns_list != null)
-        {
-            foreach (APawn pawn in pawns_list)
-            {
-                pawn.moved = false;
-                result.Add(pawn);
-            }
-        }
-        return result.ToArray();
-    }
-
-    public APawn[] Set_no_moved_in_game()
-    {
-        return this.Set_no_moved(this.Get_pawns_in_game());
     }
 
     public APawn[] Set_default_values(APawn[] pawns_list)

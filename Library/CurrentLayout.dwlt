@@ -21,7 +21,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 9}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 498}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_MinSize: {x: 204, y: 448}
   m_MaxSize: {x: 4004, y: 8048}
   vertical: 1
-  controlID: 131
+  controlID: 31
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -93,14 +93,14 @@ MonoBehaviour:
     y: 383
     width: 516
     height: 274
-  m_MinSize: {x: 232, y: 274}
-  m_MaxSize: {x: 10002, y: 10024}
-  m_ActualView: {fileID: 14}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_ActualView: {fileID: 19}
   m_Panes:
   - {fileID: 14}
   - {fileID: 19}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -122,10 +122,10 @@ MonoBehaviour:
     y: 0
     width: 516
     height: 657
-  m_MinSize: {x: 277, y: 348}
-  m_MaxSize: {x: 10002, y: 14048}
+  m_MinSize: {x: 275, y: 174}
+  m_MaxSize: {x: 4002, y: 8024}
   vertical: 1
-  controlID: 44
+  controlID: 116
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -171,8 +171,8 @@ MonoBehaviour:
     y: 0
     width: 516
     height: 383
-  m_MinSize: {x: 277, y: 74}
-  m_MaxSize: {x: 4002, y: 4024}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -200,10 +200,10 @@ MonoBehaviour:
     y: 30
     width: 1264
     height: 657
-  m_MinSize: {x: 683, y: 448}
-  m_MaxSize: {x: 18008, y: 14048}
+  m_MinSize: {x: 681, y: 448}
+  m_MaxSize: {x: 12008, y: 8048}
   vertical: 0
-  controlID: 130
+  controlID: 115
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -362,20 +362,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Resources/codigo/Pieces/black
+    - Assets/Resources/codigo/Pieces/Abstract
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Resources/codigo/Pieces/black
+  - Assets/Resources/codigo/Pieces/Abstract
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Antonio\Documents\Chess472
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 172}
-    m_SelectedIDs: e00c0000
-    m_LastClickedID: 3296
-    m_ExpandedIDs: 00000000580a0000720a00008a0a00009c0a0000ae0a0000ba0a0000ca0a0000e20a0000b40b0000c20b0000fa0b00000a0c0000320c0000560c0000900c0000de0c0000e20c0000fa0c00000a0d0000100d0000943600009636000000ca9a3b
+    m_SelectedIDs: 000d0000
+    m_LastClickedID: 3328
+    m_ExpandedIDs: 000000005c0a0000760a00008e0a0000a00a0000b20a0000be0a0000ce0a0000e60a0000ba0b0000c80b0000000c0000100c0000380c00005c0c0000960c0000e40c0000e80c0000000d0000100d0000160d00009a3600009c36000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -403,7 +403,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000580a0000720a00008a0a00009c0a0000ae0a0000ba0a0000ca0a0000e20a0000b40b0000c20b0000fa0b00000a0c0000320c0000560c0000900c0000de0c0000e20c0000fa0c00000a0d0000100d00009436000096360000
+    m_ExpandedIDs: 000000005c0a0000760a00008e0a0000a00a0000b20a0000be0a0000ce0a0000e60a0000ba0b0000c80b0000000c0000100c0000380c00005c0c0000960c0000e40c0000e80c0000000d0000100d0000160d00009a3600009c360000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -428,8 +428,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
+    m_SelectedInstanceIDs: ba090000
+    m_LastClickedInstanceID: 2490
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c623000000000000540a0000f20b0000f60b0000820b0000
     m_RenameOverlay:
@@ -522,9 +522,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 24090000
+      m_SelectedIDs: ba090000
       m_LastClickedID: 0
-      m_ExpandedIDs: d6fbffff
+      m_ExpandedIDs: d6fbffffcc0e0000280f00008e160000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 

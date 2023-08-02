@@ -32,12 +32,22 @@ public class Squares : MonoBehaviour
         this.in_game[letter, number] = square;
     }
 
-    public ASquare[,] Get_squares_in_game()
+    public ASquare[,] Get_in_game()
     {
         return this.in_game;
     }
 
-    public void Set_squares_in_game(ASquare[,] new_squares_in_game = null)
+    public ASquare[] Get_unidimensional_in_game()
+    {
+        var list = new List<ASquare>();
+        foreach (ASquare square in this.Get_in_game())
+        {
+            list.Add(square);
+        }
+        return list.ToArray();
+    }
+
+    public void Set_in_game(ASquare[,] new_squares_in_game = null)
     {
         this.in_game = new_squares_in_game;
     }
@@ -52,6 +62,28 @@ public class Squares : MonoBehaviour
             }
         }
         return list;
+    }
+
+    public ASquare[] Set_no_attacked(ASquare[] squares)
+    {
+        var list = new List<ASquare>();
+        if (squares != null)
+        {
+            foreach (ASquare square in squares)
+            {
+                square.attacked_by = new List<APiece>();
+                list.Add(square);
+            }
+        }
+        return list.ToArray();
+    }
+
+    public void Set_no_attacked_in_game()
+    {
+        foreach (ASquare square in this.Get_in_game())
+        {
+            square.attacked_by = new List<APiece>();
+        }
     }
 
     public ASquare Up(ASquare square, int number)
@@ -130,7 +162,7 @@ public class Squares : MonoBehaviour
                     resize[index_letter, index_number] = this.in_game[index_letter, index_number];
                 }
             }
-            this.Set_squares_in_game(resize);
+            this.Set_in_game(resize);
         }
     }
 

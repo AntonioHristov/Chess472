@@ -39,26 +39,26 @@ public abstract class APawn : APiece, TMoved, TDirection
 
         if (this.direction.GetComponent<Up>())
         {
-            result.Add(this.square.Up_left(1, 1));
-            result.Add(this.square.Up_right(1, 1));
+            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Up_left(1, 1));
+            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Up_right(1, 1));
         }
         else
         if (this.direction.GetComponent<Down>())
         {
-            result.Add(this.square.Down_left(1, 1));
-            result.Add(this.square.Down_right(1, 1));
+            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Down_left(1, 1));
+            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Down_right(1, 1));
         }
         else
         if (this.direction.GetComponent<Left>())
         {
-            result.Add(this.square.Up_left(1, 1));
-            result.Add(this.square.Down_left(1, 1));
+            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Up_left(1, 1));
+            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Down_left(1, 1));
         }
         else
         //if (this.direction.GetComponent<Right>())
         {
-            result.Add(this.square.Up_right(1, 1));
-            result.Add(this.square.Down_right(1, 1));
+            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Up_right(1, 1));
+            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Down_right(1, 1));
         }
 
 

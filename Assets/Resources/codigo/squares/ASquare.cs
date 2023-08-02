@@ -40,8 +40,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
     public int id_number { get; set; }
     public bool clicked_by_user { get; set; }
     public bool is_enabled { get; set; }
-    public int seen_by_white { get; set; }
-    public int seen_by_black { get; set; }
+    public List<APiece> attacked_by { get; set; }
     public Squares squares { get; set; }
     #endregion
 
@@ -53,6 +52,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
     {
         this.id_letter = letter;
         this.id_number = number;
+        this.attacked_by = new List<APiece>();
         this.GetComponentInParent<Squares>().Set_square_in_game(letter, number, this);
         this.clicked_image = Sprites.Get_square_5();
         this.enabled = Sprites.Get_square_4();

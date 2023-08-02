@@ -53,6 +53,25 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void Update_squares_attacked(APiece[] pieces)
+    {
+        foreach (APiece piece in pieces)
+        {
+            foreach (ASquare square in piece.Squares_which_this_piece_see())
+            {
+                square.attacked_by.Add(piece);
+            }
+        }
+    }
+
+    public void Update_squares_attacked_in_game()
+    {
+        this.squares.Set_no_attacked_in_game();
+        this.Update_squares_attacked(this.pieces.Get_All_in_game());
+    }
+
+
+
     /// <summary>
     /// Can move or capture
     /// </summary>
@@ -77,7 +96,7 @@ public class Board : MonoBehaviour
     {
         if (list != null && this.Check_can_move(piece,square) )
         {
-            list.Add(square);
+            list = this.Add_to_list_if_not_null(list, square);
         }
         return list;
     }
@@ -120,7 +139,7 @@ public class Board : MonoBehaviour
         {
             foreach (ASquare square in squares)
             {
-                list.Add(square);
+                list = this.Add_to_list_if_not_null(list, square);
                 if (square.piece)
                 {
                     return list;
@@ -131,6 +150,16 @@ public class Board : MonoBehaviour
     }
 
     #endregion
+
+    public List<ASquare> Add_to_list_if_not_null(List<ASquare> list, ASquare square)
+    {
+        if (list != null && square != null)
+        {
+            list.Add(square);
+        }
+        return list;
+    }
+
 
     public void Default_pieces_set_when_die()
     {

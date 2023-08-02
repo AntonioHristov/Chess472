@@ -37,6 +37,7 @@ public class Game : MonoBehaviour
     {
         this.is_white_turn = !this.is_white_turn;
         this.board.Rotate();
+        this.board.Update_squares_attacked_in_game();
     }
 
     public void White_turn()

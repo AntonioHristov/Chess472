@@ -149,7 +149,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         return this.squares.Up_left(this, number_up, number_left);
     }
 
-    public ASquare[] Up_left()
+    public ASquare[] Up_left_diagonal()
     {
         var result = new List<ASquare>();
         for (int count = 1; this.Up_left(count, count) != null; count++)
@@ -164,7 +164,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         return this.squares.Up_right(this, number_up, number_right);
     }
 
-    public ASquare[] Up_right()
+    public ASquare[] Up_right_diagonal()
     {
         var result = new List<ASquare>();
         for (int count = 1; this.Up_right(count, count) != null; count++)
@@ -179,7 +179,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         return this.squares.Down_left(this, number_down, number_left);
     }
 
-    public ASquare[] Down_left()
+    public ASquare[] Down_left_diagonal()
     {
         var result = new List<ASquare>();
         for (int count = 1; this.Down_left(count, count) != null; count++)
@@ -194,7 +194,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
         return this.squares.Down_right(this, number_down, number_right);
     }
 
-    public ASquare[] Down_right()
+    public ASquare[] Down_right_diagonal()
     {
         var result = new List<ASquare>();
         for (int count = 1; this.Down_right(count, count) != null; count++)
@@ -205,6 +205,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
     }
 
     #endregion
+
 
 
     public void Click()
@@ -320,15 +321,23 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
                     }
                 }
             }
+            else
+            if(piece_clicked.GetComponent<AKing>())
+            {
+                piece_clicked.GetComponent<AKing>().Move_rook_when_castle(this);
+            }
 
 
-            if( typeof(TMoved).IsAssignableFrom(piece_clicked.GetType()) )
+
+
+
+            squares.board.Piece_to_square(piece_clicked, this);
+
+            if (typeof(TMoved).IsAssignableFrom(piece_clicked.GetType()))
             {
                 piece_clicked.GetComponent<TMoved>().moved = true;
             }
 
-
-            squares.board.Piece_to_square(piece_clicked, this);
             this.squares.board.game.Next_turn();
         }
 

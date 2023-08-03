@@ -18,10 +18,10 @@ public abstract class AQueen : ACan_be_promotion
         result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Left());
         result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Right());
 
-        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Up_left());
-        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Up_right());
-        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Down_left());
-        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Down_right());
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Up_left_diagonal());
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Up_right_diagonal());
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Down_left_diagonal());
+        result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Down_right_diagonal());
 
         return result;
     }

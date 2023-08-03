@@ -10,5 +10,7 @@ public class Black_king : AKing
     {
         base.Awake();
         this.is_white = false;
+        TDirection_methods.Get_Down(this);
+        base.Set_sprite(Sprites.Get_black_king());
     }
 }

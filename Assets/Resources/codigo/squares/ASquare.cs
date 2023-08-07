@@ -283,63 +283,67 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
     {
         this.Awake();
         
-
-        // if click square with an own piece
-        if( this.piece != null && this.piece.is_white == squares.board.game.is_white_turn )
+        if(!this.squares.board.game.is_finished)
         {
-            this.Click_or_unclick();
-
-            // if there's no a clicked square or clicked square is this
-            if ( this.squares.clicked == null || this.squares.clicked == this )
+            // if click square with an own piece
+            if (this.piece != null && this.piece.is_white == squares.board.game.is_white_turn)
             {
-                this.squares.Enable_or_disable(this.piece.Posible_moves().ToArray());
-            }
-        }
-        // if click in an enable square to move the piece clicked
-        else
-        if( this.is_enabled && squares.clicked && squares.clicked.piece)
-        {
-            var piece_clicked = squares.clicked.piece;
+                this.Click_or_unclick();
 
-            this.squares.Disable(squares.clicked.piece.Posible_moves().ToArray());
-            this.squares.clicked.Unclick();
-
-            if(piece_clicked.GetComponent<APawn>() )
-            {
-                // Trying to capture the target piece en passant , if its not been able to do it, then...
-                if (! piece_clicked.GetComponent<APawn>().Try_capture_en_passant(this) )
+                // if there's no a clicked square or clicked square is this
+                if (this.squares.clicked == null || this.squares.clicked == this)
                 {
-                    // All pawns in game are not en passant target. This is because we want a pawn which is an en passant target only the first chance and not more
-                    this.squares.board.pieces.Set_no_targets_en_passant_in_game();
-
-                    // if pawn's first move and go 2 squares, is a target for en passant, if not not.
-                    piece_clicked.GetComponent<APawn>().Is_en_passant_target(this);
-
-                    if ( piece_clicked.GetComponent<APawn>().direction.Forward(this, -7))//-7
-                    {
-                        piece_clicked.GetComponent<APawn>().Open_box_promotion();
-                    }
+                    this.squares.Enable_or_disable(this.piece.Posible_moves().ToArray());
                 }
             }
+            // if click in an enable square to move the piece clicked
             else
-            if(piece_clicked.GetComponent<AKing>())
+            if (this.is_enabled && squares.clicked && squares.clicked.piece)
             {
-                piece_clicked.GetComponent<AKing>().Move_rook_when_castle(this);
+                var piece_clicked = squares.clicked.piece;
+
+                this.squares.Disable(squares.clicked.piece.Posible_moves().ToArray());
+                this.squares.clicked.Unclick();
+
+                if (piece_clicked.GetComponent<APawn>())
+                {
+                    // Trying to capture the target piece en passant , if its not been able to do it, then...
+                    if (!piece_clicked.GetComponent<APawn>().Try_capture_en_passant(this))
+                    {
+                        // All pawns in game are not en passant target. This is because we want a pawn which is an en passant target only the first chance and not more
+                        this.squares.board.pieces.Set_no_targets_en_passant_in_game();
+
+                        // if pawn's first move and go 2 squares, is a target for en passant, if not not.
+                        piece_clicked.GetComponent<APawn>().Is_en_passant_target(this);
+
+                        if (piece_clicked.GetComponent<APawn>().direction.Forward(this, -7))//-7
+                        {
+                            piece_clicked.GetComponent<APawn>().Open_box_promotion();
+                        }
+                    }
+                }
+                else
+                if (piece_clicked.GetComponent<AKing>())
+                {
+                    piece_clicked.GetComponent<AKing>().Move_rook_when_castle(this);
+                }
+
+
+
+
+
+                squares.board.Piece_to_square(piece_clicked, this);
+
+                if (typeof(TMoved).IsAssignableFrom(piece_clicked.GetType()))
+                {
+                    piece_clicked.GetComponent<TMoved>().moved = true;
+                }
+
+                this.squares.board.game.Next_turn();
             }
-
-
-
-
-
-            squares.board.Piece_to_square(piece_clicked, this);
-
-            if (typeof(TMoved).IsAssignableFrom(piece_clicked.GetType()))
-            {
-                piece_clicked.GetComponent<TMoved>().moved = true;
-            }
-
-            this.squares.board.game.Next_turn();
         }
+
+
 
 
     }

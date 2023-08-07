@@ -18,8 +18,16 @@ public abstract class APawn : APiece, TMoved, TDirection
         this.moved = false;
         if(this.pieces && this.pieces.board && this.pieces.board.game && this.pieces.board.game.boxes)
         {
-            this.pieces.board.game.boxes.Get_box_promote().Hide();
-            this.pieces.board.game.boxes.Get_box_confirm_promotion().Hide();
+            if(this.pieces.board.game.boxes.Get_box_promote())
+            {
+                this.pieces.board.game.boxes.Get_box_promote().Hide();
+
+            }
+            if (this.pieces.board.game.boxes.Get_box_confirm_promotion())
+            {
+                this.pieces.board.game.boxes.Get_box_confirm_promotion().Hide();
+
+            }
         }
     }
 
@@ -32,7 +40,7 @@ public abstract class APawn : APiece, TMoved, TDirection
     {
         var result = new List<ASquare>();
 
-        if ( this.direction == null)
+        if (!base.is_alive || this.direction == null)
         {
             return result;
         }

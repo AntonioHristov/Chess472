@@ -60,6 +60,10 @@ public class Board : MonoBehaviour
             foreach (ASquare square in piece.Squares_which_this_piece_see())
             {
                 square.attacked_by.Add(piece);
+                if(square.piece && square.piece.GetComponent<AKing>() && square.piece.is_white != piece.is_white)
+                {
+                    game.theres_a_check = true;
+                }
             }
         }
     }
@@ -67,7 +71,45 @@ public class Board : MonoBehaviour
     public void Update_squares_attacked_in_game()
     {
         this.squares.Set_no_attacked_in_game();
+        this.game.theres_a_check = false;
         this.Update_squares_attacked(this.pieces.Get_All_in_game());
+    }
+
+    public bool Check_cant_move(APiece[] pieces)
+    {
+        foreach (APiece piece in pieces)
+        {
+            if (piece.is_white == this.game.is_white_turn && piece.Posible_moves().Count > 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public bool Check_cant_move_in_game()
+    {
+        return this.Check_cant_move(this.pieces.Get_All_in_game());
+    }
+
+    public bool Check_is_stalemate(APiece[] pieces)
+    {
+        return this.Check_cant_move(pieces) && !this.game.theres_a_check;
+    }
+
+    public bool Check_is_stalemate_in_game()
+    {
+        return this.Check_is_stalemate(this.pieces.Get_All_in_game());
+    }
+
+    public bool Check_is_checkmate(APiece[] pieces)
+    {
+        return this.Check_cant_move(pieces) && this.game.theres_a_check;
+    }
+
+    public bool Check_is_checkmate_in_game()
+    {
+        return this.Check_is_checkmate(this.pieces.Get_All_in_game());
     }
 
 
@@ -96,7 +138,25 @@ public class Board : MonoBehaviour
     {
         if (list != null && this.Check_can_move(piece,square) )
         {
-            list = this.Add_to_list_if_not_null(list, square);
+            //Create game property is_auxiliar
+            if (this.game.theres_a_check)
+            {
+                var piece_copy = piece;
+                var square_copy = square;
+                var game_aux = GameObject.Instantiate<Game>(this.game);
+                game_aux.board.Piece_to_square(piece_copy,square_copy);
+                game_aux.Next_turn();
+                if(!game_aux.theres_a_check)
+                {
+                    list = this.Add_to_list_if_not_null(list, square);
+                }
+                //Destroy(game_aux);
+            }
+            else
+            {
+                list = this.Add_to_list_if_not_null(list, square);
+            }
+            //list = this.Add_to_list_if_not_null(list, square);
         }
         return list;
     }
@@ -179,6 +239,18 @@ public class Board : MonoBehaviour
     public void Default_pieces_to_squares()
     {
         var pieces = this.pieces.Get_All_in_game();
+
+
+        pieces[14].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_2));
+        pieces[15].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_3));
+        pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_G, ASquare.ID_1));
+        pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_2));
+        /*
+        pieces[14].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_2));
+        pieces[15].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_3));
+        pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_G, ASquare.ID_1));
+        */
+        /*
         pieces[0].Revive(this.squares.Get_square_in_game (ASquare.ID_A, ASquare.ID_2));
         pieces[1].Revive(this.squares.Get_square_in_game (ASquare.ID_B, ASquare.ID_2));
         pieces[2].Revive(this.squares.Get_square_in_game (ASquare.ID_C, ASquare.ID_2));
@@ -212,6 +284,7 @@ public class Board : MonoBehaviour
         pieces[29].Revive(this.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_8));
         pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_8));
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_8));
+        */
     }
 
     public void Default_values_pieces()

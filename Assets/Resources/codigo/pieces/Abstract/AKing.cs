@@ -22,6 +22,11 @@ public abstract class AKing : APiece, TMoved, TDirection
     {
         var result = new List<ASquare>();
 
+        if (!base.is_alive)
+        {
+            return result;
+        }
+
         result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Up(1));
         result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Up_left(1,1));
         result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Up_right(1,1));

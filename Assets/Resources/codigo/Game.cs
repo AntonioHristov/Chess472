@@ -14,6 +14,7 @@ public class Game : MonoBehaviour
     public bool is_white_turn;
     //public bool is_white_turn { get; set; }
     public bool is_finished { get; set; }
+    public bool theres_a_check { get; set; }
 
 
 
@@ -36,14 +37,33 @@ public class Game : MonoBehaviour
     public void Next_turn()
     {
         this.is_white_turn = !this.is_white_turn;
-        this.board.Rotate();
         this.board.Update_squares_attacked_in_game();
+
+        if (!this.Game_finished())
+        {
+            this.board.Rotate();
+        }
     }
 
     public void White_turn()
     {
         is_white_turn = true;
         this.board.Rotate_default();
+    }
+
+    public bool Game_finished()
+    {
+        if (this.board.Check_is_stalemate_in_game())
+        {
+            this.Stalemate();
+            return true;
+        }
+        else if (this.board.Check_is_checkmate_in_game())
+        {
+            this.Checkmate();
+            return true;
+        }
+        return false;
     }
 
     public void Check()
@@ -54,11 +74,19 @@ public class Game : MonoBehaviour
     public void Checkmate()
     {
         is_finished = true;
+        if(this.board.game.boxes.Get_box_checkmate())
+        {
+            this.board.game.boxes.Get_box_checkmate().Show();
+        }
     }
 
     public void Stalemate()
     {
         is_finished = true;
+        if (this.board.game.boxes.Get_box_stalemate())
+        {
+            this.board.game.boxes.Get_box_stalemate().Show();
+        }
     }
 
     public void Win_white()

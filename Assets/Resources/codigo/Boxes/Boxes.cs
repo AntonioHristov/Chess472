@@ -47,13 +47,17 @@ public class Boxes : MonoBehaviour
 
     public Box_promote Get_box_promote(ABox[] list)
     {
-        foreach (ABox box in list)
+        if (list != null)
         {
-            if(box.GetComponent<Box_promote>())
+            foreach (ABox box in list)
             {
-                return box.GetComponent<Box_promote>();
+                if (box.GetComponent<Box_promote>())
+                {
+                    return box.GetComponent<Box_promote>();
+                }
             }
         }
+
         return null;
     }
 
@@ -64,11 +68,14 @@ public class Boxes : MonoBehaviour
 
     public Box_confirm_promotion Get_box_confirm_promotion(ABox[] list)
     {
-        foreach (ABox box in list)
+        if (list != null)
         {
-            if (box.GetComponent<Box_confirm_promotion>())
+            foreach (ABox box in list)
             {
-                return box.GetComponent<Box_confirm_promotion>();
+                if (box.GetComponent<Box_confirm_promotion>())
+                {
+                    return box.GetComponent<Box_confirm_promotion>();
+                }
             }
         }
         return null;
@@ -77,6 +84,46 @@ public class Boxes : MonoBehaviour
     public Box_confirm_promotion Get_box_confirm_promotion()
     {
         return this.Get_box_confirm_promotion(this.all);
+    }
+
+    public Box_stalemate Get_box_stalemate(ABox[] list)
+    {
+        if (list != null)
+        {
+            foreach (ABox box in list)
+            {
+                if (box.GetComponent<Box_stalemate>())
+                {
+                    return box.GetComponent<Box_stalemate>();
+                }
+            }
+        }
+        return null;
+    }
+
+    public Box_stalemate Get_box_stalemate()
+    {
+        return this.Get_box_stalemate(this.all);
+    }
+
+    public Box_checkmate Get_box_checkmate(ABox[] list)
+    {
+        if (list != null)
+        {
+            foreach (ABox box in list)
+            {
+                if (box.GetComponent<Box_checkmate>())
+                {
+                    return box.GetComponent<Box_checkmate>();
+                }
+            }
+        }
+        return null;
+    }
+
+    public Box_checkmate Get_box_checkmate()
+    {
+        return this.Get_box_checkmate(this.all);
     }
 
 

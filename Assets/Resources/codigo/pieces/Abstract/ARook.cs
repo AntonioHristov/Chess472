@@ -14,6 +14,11 @@ public abstract class ARook : ACan_be_promotion, TMoved
     {
         var result = new List<ASquare>();
 
+        if (!base.is_alive)
+        {
+            return result;
+        }
+
         result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Up());
         result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Down());
         result = this.pieces.board.Add_to_list_if_can_see_without_jump(result, this, this.square.Left());

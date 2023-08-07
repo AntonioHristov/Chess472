@@ -63,9 +63,11 @@
     <Compile Include="Assets\Resources\codigo\Board\Board.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\ABox.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\Boxes.cs" />
+    <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_checkmate.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_confirm_promotion.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_promote.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_read.cs" />
+    <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_stalemate.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_write.cs" />
     <Compile Include="Assets\Resources\codigo\Boxes\cajas_de_texto\Box_yes_no.cs" />
     <Compile Include="Assets\Resources\codigo\Buttons\AButton.cs" />

@@ -40,7 +40,14 @@ public abstract class APiece : MonoBehaviour
     public abstract List<ASquare> Squares_which_this_piece_see();
     public virtual List<ASquare> Posible_moves()
     {
-        return this.pieces.board.Add_to_list_if_can_move(new List<ASquare>(), this, this.Squares_which_this_piece_see().ToArray());
+        if (!this.is_alive)
+        {
+            return new List<ASquare>();
+        }
+        else
+        {
+            return this.pieces.board.Add_to_list_if_can_move(new List<ASquare>(), this, this.Squares_which_this_piece_see().ToArray());
+        }
     }
 
 public void Die()

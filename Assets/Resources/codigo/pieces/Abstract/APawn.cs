@@ -75,25 +75,40 @@ public abstract class APawn : APiece, TMoved, TDirection
     }
 
     public override List<ASquare> Posible_moves()
-    {    
-        var result = new List<ASquare>();
-
-        result = this.Add_to_list_if_can_move_without_capture(result, this.direction.Forward(this.square, 1));
-
-        if (!this.moved && this.Check_can_move_without_capture(this.direction.Forward(this.square, 1)) )
+    {
+        if (!this.is_alive)
         {
-            result = this.Add_to_list_if_can_move_without_capture(result, this.direction.Forward(this.square, 2));
+            return new List<ASquare>();
+        }
+        else
+        {
+            if (!this.Is_cache_empty())
+            {
+                return this.cache_posible_moves;
+            }
+            else
+            {
+                var result = new List<ASquare>();
+
+                result = this.Add_to_list_if_can_move_without_capture(result, this.direction.Forward(this.square, 1));
+
+                if (!this.moved && this.Check_can_move_without_capture(this.direction.Forward(this.square, 1)))
+                {
+                    result = this.Add_to_list_if_can_move_without_capture(result, this.direction.Forward(this.square, 2));
+                }
+
+
+                foreach (ASquare square in this.Squares_which_this_piece_see())
+                {
+                    result = this.Add_to_list_if_can_capture(result, square);
+                }
+
+                result = this.Add_to_list_if_en_passant(result);
+
+                return result;
+            }
         }
 
-
-        foreach (ASquare square in this.Squares_which_this_piece_see())
-        {
-            result = this.Add_to_list_if_can_capture(result, square);
-        }
-
-        result = this.Add_to_list_if_en_passant(result);
-
-        return result;
     }
 
     public List<ASquare> Add_to_list_if_can_capture(List<ASquare> list, ASquare square)
@@ -304,6 +319,20 @@ public abstract class APawn : APiece, TMoved, TDirection
         this.pieces.Update_pieces_in_game();
     }
 
+    /*
+    public bool Theres_no_checks_to_me_after_promote(Sprite sprite_promotion)
+    {
+        var gameobject_clone_game = this.pieces.board.game.Clone_game();
+        var square_promotion = this.direction.Forward(this.direction.Forward(this.square,1), -7);
+
+        var this_in_cloned_game = this.pieces.board.game.Get_in_cloned_game(this, gameobject_clone_game);
+        var square_in_cloned_game = this.pieces.board.game.Get_in_cloned_game(square_promotion, gameobject_clone_game);
+
+        this_in_cloned_game.GetComponent<APawn>().Promote(sprite_promotion);
+
+        return this.pieces.board.game.Theres_no_checks_to_me_after_move(this_in_cloned_game, square_in_cloned_game, gameobject_clone_game);
+    }
+    */
 
     public override void Default_values()
     {

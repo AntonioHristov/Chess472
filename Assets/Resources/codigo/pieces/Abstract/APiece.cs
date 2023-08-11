@@ -15,7 +15,7 @@ public abstract class APiece : MonoBehaviour
     public ASquare square;
     public abstract bool is_white { get; set; }
     public bool is_alive;
-
+    public List<ASquare> cache_posible_moves { get; set; }
 
 
     public Pieces pieces { get; set; }
@@ -53,11 +53,18 @@ public abstract class APiece : MonoBehaviour
                 Debug.Log(square);
             }
             */
-            return this.pieces.board.Add_to_list_if_can_move(new List<ASquare>(), this, this.Squares_which_this_piece_see().ToArray());
+            if(!this.Is_cache_empty())
+            {
+                return this.cache_posible_moves;
+            }
+            else
+            {
+                return this.pieces.board.Add_to_list_if_can_move(new List<ASquare>(), this, this.Squares_which_this_piece_see().ToArray());
+            }
         }
     }
 
-public void Die()
+    public void Die()
     { this.is_alive = false; this.GetComponentInParent<Board>().Piece_to_square(this, when_die); }
     public void Revive(ASquare square)
     { this.is_alive = true; this.GetComponentInParent<Board>().Piece_to_square(this, square); }
@@ -70,6 +77,43 @@ public void Die()
         }
         this.gameObject.GetComponent<Image>().sprite = sprite;
     }
+
+    public bool Is_cache_empty()
+    { return this.cache_posible_moves.Count == 0; }
+
+    public bool Theres_in_cache(ASquare square)
+    {
+        foreach (ASquare cache_square in this.cache_posible_moves)
+        {
+            if(square == cache_square)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<ASquare> Get_cache()
+    {
+        return this.cache_posible_moves;
+    }
+
+    public void Set_cache(ASquare square)
+    {
+        if(square != null && this.cache_posible_moves != null && !this.Theres_in_cache(square))
+        {
+            this.cache_posible_moves.Add(square);
+        }
+    }
+
+    public void Set_cache_empty()
+    {
+        this.cache_posible_moves = new List<ASquare>();
+    }
+
+
+
+
     #endregion
 
     public void Awake()
@@ -78,6 +122,7 @@ public void Die()
         if (GameObject.FindObjectsOfType<Game>().Length == 1)
         {
             this.is_alive = false;
+            this.Set_cache_empty();
         }
         
 

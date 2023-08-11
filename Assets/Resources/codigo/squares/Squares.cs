@@ -292,14 +292,6 @@ public class Squares : MonoBehaviour
         this.Set_default_values(this.in_game);
     }
 
-    public Squares Set_values(Squares squares_with_values)
-    {
-        this.in_game = squares_with_values.in_game;
-        this.clicked = squares_with_values.clicked;
-        this.when_die = squares_with_values.when_die;
-        return this;
-    }
-
     void Awake()
     {
         this.board = this.GetComponentInParent<Board>();

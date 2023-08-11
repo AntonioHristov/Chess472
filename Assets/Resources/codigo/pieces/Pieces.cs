@@ -238,7 +238,7 @@ public class Pieces : MonoBehaviour
 
     public APiece[] Get_moved_in_game()
     {
-        return this.Get_moved(this.Get_pawns_in_game());
+        return this.Get_moved(this.Get_All_in_game());
     }
 
     public APiece[] Get_no_moved(APiece[] pieces)
@@ -260,7 +260,7 @@ public class Pieces : MonoBehaviour
 
     public APiece[] Get_no_moved_in_game()
     {
-        return this.Get_no_moved(this.Get_pawns_in_game());
+        return this.Get_no_moved(this.Get_All_in_game());
     }
 
     public APiece[] Set_moved(APiece[] pieces)
@@ -282,7 +282,7 @@ public class Pieces : MonoBehaviour
 
     public APiece[] Set_moved_in_game()
     {
-        return this.Set_moved(this.Get_pawns_in_game());
+        return this.Set_moved(this.Get_All_in_game());
     }
 
     public APiece[] Set_no_moved(APiece[] pieces)
@@ -304,7 +304,25 @@ public class Pieces : MonoBehaviour
 
     public APiece[] Set_no_moved_in_game()
     {
-        return this.Set_no_moved(this.Get_pawns_in_game());
+        return this.Set_no_moved(this.Get_All_in_game());
+    }
+
+    public APiece[] Set_cache_empty(APiece[] pieces)
+    {
+        var result = new List<APiece>();
+        if (pieces != null)
+        {
+            foreach (APiece piece in pieces)
+            {
+                piece.Set_cache_empty();
+            }
+        }
+        return result.ToArray();
+    }
+
+    public APiece[] Set_cache_empty_in_game()
+    {
+        return this.Set_cache_empty(this.Get_All_in_game());
     }
 
     public void Set_default_values(APiece[] pieces_list)
@@ -594,16 +612,6 @@ public class Pieces : MonoBehaviour
         }
     }
 
-    public Pieces Set_values(Pieces pieces_with_values)
-    {
-        this.Set_All_in_game(pieces_with_values.in_game);
-        foreach (APiece piece in this.Get_All_in_game())
-        {
-            this.board.Piece_to_square(piece, piece.square);
-        }
-        //this.in_game = pieces_with_values.in_game;
-        return this;
-    }
     public void Awake()
     {
         this.in_game = this.GetComponentsInChildren<APiece>();

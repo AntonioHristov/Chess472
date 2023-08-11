@@ -152,56 +152,62 @@ public class Board : MonoBehaviour
         if (list != null && this.Check_can_move(piece,square) )
         {
 
-            if (this.game.Theres_a_check())
+            if (this.game.Theres_a_check() && !piece.GetComponent<AKing>())
             {
-                this.pieces.Update_pieces_in_game();
-                var clone_go = this.game.Clone_game();
-                var clone_game = clone_go.GetComponent<Game>();
-
-                var last_piece_aux = clone_game.board.pieces.Get_piece_in_game(this.pieces.Get_id_in_game(this.game.last_piece_moved).Value);
-                var last_square_aux = clone_game.board.squares.Get_square_in_game(this.game.last_square_moved);
-                clone_game.board.Piece_to_square(last_piece_aux, last_square_aux);
-
-                //clone_game.Default_values_aux();
-                
-                
-                var piece_aux = clone_game.board.pieces.Get_piece_in_game(this.pieces.Get_id_in_game(piece).Value);
-                var square_aux = clone_game.board.squares.Get_square_in_game(square);
-
-                //var previous_square_aux = piece_aux.square;
-                //bool previous_moved=false;
-                //var previous_piece_square_aux = square_aux.piece;
-
-
-                clone_game.board.Piece_to_square(piece_aux, square_aux);
-
-                if (typeof(TMoved).IsAssignableFrom(piece_aux.GetType()))
+                /*
+                if(piece.GetComponent<APawn>() && piece.GetComponent<APawn>().direction.Forward(square, -7))
                 {
-                    piece_aux.GetComponent<TMoved>().moved = true;
+                    //The move is a promotion, so I check all promotion posibilities 
+                    if(piece.is_white)
+                    {
+                        if (piece.GetComponent<APawn>().Theres_no_checks_to_me_after_promote(Sprites.Get_white_knight()))
+                        {
+                            list = this.Add_to_list_if_not_null(list, square);
+                            piece.Set_cache(square);
+                        }
+                        if (piece.GetComponent<APawn>().Theres_no_checks_to_me_after_promote(Sprites.Get_white_bishop()))
+                        {
+                            list = this.Add_to_list_if_not_null(list, square);
+                            piece.Set_cache(square);
+                        }
+                    }
+                    else
+                    {
+
+                    }
+
+
+
                 }
+                else
+                {
+                    if (this.game.Theres_no_checks_to_me_after_move(piece, square))
+                    {
+                        list = this.Add_to_list_if_not_null(list, square);
+                        piece.Set_cache(square);
+                    }
+                }
+                */
 
-                //clone_game.board.squares.board.game.Next_turn();
-                clone_game.is_white_turn = !clone_game.is_white_turn;
-                clone_game.board.Update_squares_attacked_in_game();
-
-                Debug.Log(piece_aux);
-                Debug.Log(square_aux);
-                Debug.Log(!clone_game.Theres_a_check());
-                //Debug.Log(!clone_game.Theres_a_check() || clone_game.kings_get_a_check.is_white != piece_aux.is_white);
-                // CONVERT king_gets_a_check TO A LIST OF KINGS
-                if (!clone_game.Theres_a_check() || (!clone_game.Theres_a_check_to_color(piece_aux.is_white)) )
+                if (this.game.Theres_no_checks_to_me_after_move(piece, square))
                 {
                     list = this.Add_to_list_if_not_null(list, square);
+                    piece.Set_cache(square);
                 }
+
+
+                /*
                 if( square_aux.id_letter != ASquare.ID_G || square_aux.id_number != ASquare.ID_2 || !piece_aux.GetComponent<Black_queen>())
                 {
-                    Destroy(clone_game.gameObject);
+                    DestroyImmediate(clone_game.gameObject);
                 }
-                
+                */
+
             }
             else
             {
                 list = this.Add_to_list_if_not_null(list, square);
+                piece.Set_cache(square);
             }
             //list = this.Add_to_list_if_not_null(list, square);
         }
@@ -287,16 +293,21 @@ public class Board : MonoBehaviour
     {
         var pieces = this.pieces.Get_All_in_game();
 
+        //TEST CLONED GAME WHEN PAWN PROMOTE
 
         pieces[14].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_2));
         pieces[15].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_3));
-        pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_G, ASquare.ID_1));
+        pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_G, ASquare.ID_8));
         pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_2));
+
         /*
         pieces[14].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_2));
         pieces[15].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_3));
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_G, ASquare.ID_1));
+        pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_2));
         */
+
+
         /*
         pieces[0].Revive(this.squares.Get_square_in_game (ASquare.ID_A, ASquare.ID_2));
         pieces[1].Revive(this.squares.Get_square_in_game (ASquare.ID_B, ASquare.ID_2));

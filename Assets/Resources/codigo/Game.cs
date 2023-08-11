@@ -40,27 +40,11 @@ public class Game : MonoBehaviour
         is_finished = false;
     }
 
-    public Game Default_values_aux()
-    {
-        var main = GameObject.FindObjectsOfType<Game>()[0];
-        var aux = GameObject.FindObjectsOfType<Game>()[1];
-        aux.is_finished = true;
-        aux.is_white_turn = main.is_white_turn;
-        aux.board = main.board;
-        aux.board.squares = main.board.squares;
-        aux.board.squares.Set_in_game(main.board.squares.Get_in_game());
-        aux.board.pieces = main.board.pieces;
-        aux.board.pieces.Set_All_in_game(main.board.pieces.Get_All_in_game());
-        board.pieces.Update_pieces_in_game();
-        is_finished = false;
-
-        return aux;
-    }
-
     public void Next_turn()
     {
         this.is_white_turn = !this.is_white_turn;
         this.board.Update_squares_attacked_in_game();
+        this.board.pieces.Set_cache_empty_in_game();
 
         if (!this.Game_finished())
         {
@@ -154,19 +138,87 @@ public class Game : MonoBehaviour
         Debug.Log("CREATED");
         if(GameObject.FindObjectsOfType<Game>().Length > 1)
         {
-            //var result = Default_values_aux();
-            //var aux = GameObject.FindObjectsOfType<Game>()[1];
-            //Game.auxiliar = GameObject.Instantiate(this.gameObject);
-            var result = GameObject.Instantiate(this.GetComponent<Game>().gameObject);
+            var result = GameObject.Instantiate(this.gameObject);
+
             return result;
         }
         else
         {
             var result = GameObject.Instantiate(this.gameObject);
-            Game.auxiliar = result;
             return result;
         }
     }
+
+    // FIXME: Dont forget the case when you can promote pawns
+    public Game Make_a_move_in_a_cloned_game(APiece piece, ASquare square, GameObject clone_gameobject=null)
+    {
+        Game clone_game;
+        this.board.pieces.Update_pieces_in_game();
+      
+        if(!clone_gameobject)
+        {
+            clone_game = this.Clone_game().GetComponent<Game>();
+        }
+        else
+        {
+            clone_game = clone_gameobject.GetComponent<Game>();
+        }
+
+        var last_piece_aux = clone_game.board.pieces.Get_piece_in_game(this.board.pieces.Get_id_in_game(this.last_piece_moved).Value);
+        var last_square_aux = clone_game.board.squares.Get_square_in_game(this.last_square_moved);
+        if (last_piece_aux && last_square_aux)
+        {
+            clone_game.board.Piece_to_square(last_piece_aux, last_square_aux);
+        }
+
+
+        var piece_aux = clone_game.board.pieces.Get_piece_in_game(this.board.pieces.Get_id_in_game(piece).Value);
+        var square_aux = clone_game.board.squares.Get_square_in_game(square);
+
+
+        clone_game.board.Piece_to_square(piece_aux, square_aux);
+
+        if (typeof(TMoved).IsAssignableFrom(piece_aux.GetType()))
+        {
+            piece_aux.GetComponent<TMoved>().moved = true;
+        }
+
+        clone_game.is_white_turn = !clone_game.is_white_turn;
+        clone_game.board.Update_squares_attacked_in_game();
+
+        return clone_game;
+    }
+
+    public bool Theres_no_checks_to_me_after_move(APiece piece, ASquare square, GameObject clone_gameobject = null)
+    {
+        var clon_game_after_move = this.Make_a_move_in_a_cloned_game(piece, square, clone_gameobject);
+        return !clon_game_after_move.Theres_a_check() || (!clon_game_after_move.Theres_a_check_to_color(piece.is_white));
+    }
+
+    public APiece Get_in_cloned_game(APiece piece, GameObject clone_gameobject)
+    {
+        if(!piece || !clone_gameobject || !clone_gameobject.GetComponent<Game>())
+        {
+            return null;
+        }
+        else
+        {
+            return clone_gameobject.GetComponent<Game>().board.pieces.Get_piece_in_game(this.board.pieces.Get_id_in_game(piece).Value);
+        }
+    }
+
+    public ASquare Get_in_cloned_game(ASquare square, GameObject clone_gameobject)
+    {
+        if (!square || !clone_gameobject || !clone_gameobject.GetComponent<Game>())
+        {
+            return null;
+        }
+        else
+        {
+            return clone_gameobject.GetComponent<Game>().board.squares.Get_square_in_game(square);
+        }
+    }
+
 
     public bool Theres_a_check()
     {

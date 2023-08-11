@@ -26,6 +26,11 @@ public class Squares : MonoBehaviour
         }
     }
 
+    public ASquare Get_square_in_game(ASquare square)
+    {
+        return this.Get_square_in_game(square.id_letter, square.id_number);
+    }
+
     public void Set_square_in_game(int letter, int number, ASquare square = null)
     {
         Check_and_resize_squares_size(letter, number);
@@ -287,7 +292,13 @@ public class Squares : MonoBehaviour
         this.Set_default_values(this.in_game);
     }
 
-
+    public Squares Set_values(Squares squares_with_values)
+    {
+        this.in_game = squares_with_values.in_game;
+        this.clicked = squares_with_values.clicked;
+        this.when_die = squares_with_values.when_die;
+        return this;
+    }
 
     void Awake()
     {

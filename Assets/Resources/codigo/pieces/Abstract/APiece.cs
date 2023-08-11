@@ -46,6 +46,13 @@ public abstract class APiece : MonoBehaviour
         }
         else
         {
+            /*
+            Debug.Log(this);
+            foreach (ASquare square in this.Squares_which_this_piece_see())
+            {
+                Debug.Log(square);
+            }
+            */
             return this.pieces.board.Add_to_list_if_can_move(new List<ASquare>(), this, this.Squares_which_this_piece_see().ToArray());
         }
     }
@@ -68,7 +75,11 @@ public void Die()
     public void Awake()
     {
         pieces = this.GetComponentInParent<Pieces>();
-        this.is_alive = false;
+        if (GameObject.FindObjectsOfType<Game>().Length == 1)
+        {
+            this.is_alive = false;
+        }
+        
 
 
     }

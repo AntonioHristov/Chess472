@@ -570,9 +570,40 @@ public class Pieces : MonoBehaviour
     #endregion
 
 
+    public int? Get_id_in_game(APiece piece)
+    {
+        for(int i=0; i< this.Get_All_in_game().Length;i++)
+        {
+            if(this.Get_All_in_game()[i] == piece)
+            {
+                return i;
+            }
+        }
+        return null;
+    }
 
+    public APiece Get_piece_in_game(int id)
+    {
+        if(id < 0 || !(id < this.Get_All_in_game().Length) )
+        {
+            return null;
+        }
+        else
+        {
+            return this.Get_All_in_game()[id];
+        }
+    }
 
-
+    public Pieces Set_values(Pieces pieces_with_values)
+    {
+        this.Set_All_in_game(pieces_with_values.in_game);
+        foreach (APiece piece in this.Get_All_in_game())
+        {
+            this.board.Piece_to_square(piece, piece.square);
+        }
+        //this.in_game = pieces_with_values.in_game;
+        return this;
+    }
     public void Awake()
     {
         this.in_game = this.GetComponentsInChildren<APiece>();

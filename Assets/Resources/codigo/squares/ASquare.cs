@@ -35,7 +35,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
     public Sprite main_image { get; set; }
     public Sprite clicked_image { get; set; }
     public Sprite enabled_image { get; set; }
-    public APiece piece { get; set; }
+    public APiece piece;
     public int id_letter { get; set; }
     public int id_number { get; set; }
     public bool clicked_by_user { get; set; }
@@ -52,7 +52,7 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
     {
         this.id_letter = letter;
         this.id_number = number;
-        this.attacked_by = new List<APiece>();
+
         this.GetComponentInParent<Squares>().Set_square_in_game(letter, number, this);
         this.clicked_image = Sprites.Get_square_5();
         this.enabled = Sprites.Get_square_4();
@@ -69,6 +69,11 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
             // is light square
             this.main_image = Sprites.Get_square_2();
         }
+        if (GameObject.FindObjectsOfType<Game>().Length == 1)
+        {
+            this.attacked_by = new List<APiece>();
+        }
+
     }
 
     protected void Default_when_die()
@@ -333,6 +338,8 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
 
 
                 squares.board.Piece_to_square(piece_clicked, this);
+                this.squares.board.game.last_piece_moved = piece_clicked;
+                this.squares.board.game.last_square_moved = this;
 
                 if (typeof(TMoved).IsAssignableFrom(piece_clicked.GetType()))
                 {
@@ -356,7 +363,11 @@ public abstract class ASquare : MonoBehaviour, IPointerDownHandler
 
     public void Start()
     {
-        this.Default_values();
+        if (GameObject.FindObjectsOfType<Game>().Length == 1)
+        {
+            this.Default_values();
+        }
+        
     }
 }
 

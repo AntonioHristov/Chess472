@@ -57,12 +57,25 @@ public class Board : MonoBehaviour
     {
         foreach (APiece piece in pieces)
         {
-            foreach (ASquare square in piece.Squares_which_this_piece_see())
+            if (piece.is_alive)
             {
-                square.attacked_by.Add(piece);
-                if(square.piece && square.piece.GetComponent<AKing>() && square.piece.is_white != piece.is_white)
+                foreach (ASquare square in piece.Squares_which_this_piece_see())
                 {
-                    game.theres_a_check = true;
+                    square.attacked_by.Add(piece);
+                    
+                    /*
+                    if(square.id_letter == ASquare.ID_G && square.id_number == ASquare.ID_1)
+                    {
+                        Debug.Log(piece + " attack " + square);
+                        Debug.Log(square.piece);
+                        Debug.Log(pieces[31].square);
+                    }
+                    */
+                    if (square.piece && square.piece.GetComponent<AKing>() && square.piece.is_white != piece.is_white)
+                    {
+                        this.game.kings_get_a_check.Add(square.piece.GetComponent<AKing>());
+                        //Debug.Log("King " + this.game.kings_get_a_check + " attacked by " + piece);
+                    }
                 }
             }
         }
@@ -71,7 +84,7 @@ public class Board : MonoBehaviour
     public void Update_squares_attacked_in_game()
     {
         this.squares.Set_no_attacked_in_game();
-        this.game.theres_a_check = false;
+        this.game.kings_get_a_check = new List<AKing>();
         this.Update_squares_attacked(this.pieces.Get_All_in_game());
     }
 
@@ -94,7 +107,7 @@ public class Board : MonoBehaviour
 
     public bool Check_is_stalemate(APiece[] pieces)
     {
-        return this.Check_cant_move(pieces) && !this.game.theres_a_check;
+        return this.Check_cant_move(pieces) && !this.game.Theres_a_check();
     }
 
     public bool Check_is_stalemate_in_game()
@@ -104,7 +117,7 @@ public class Board : MonoBehaviour
 
     public bool Check_is_checkmate(APiece[] pieces)
     {
-        return this.Check_cant_move(pieces) && this.game.theres_a_check;
+        return this.Check_cant_move(pieces) && this.game.Theres_a_check();
     }
 
     public bool Check_is_checkmate_in_game()
@@ -138,19 +151,53 @@ public class Board : MonoBehaviour
     {
         if (list != null && this.Check_can_move(piece,square) )
         {
-            //Create game property is_auxiliar
-            if (this.game.theres_a_check)
+
+            if (this.game.Theres_a_check())
             {
-                var piece_copy = piece;
-                var square_copy = square;
-                var game_aux = GameObject.Instantiate<Game>(this.game);
-                game_aux.board.Piece_to_square(piece_copy,square_copy);
-                game_aux.Next_turn();
-                if(!game_aux.theres_a_check)
+                this.pieces.Update_pieces_in_game();
+                var clone_go = this.game.Clone_game();
+                var clone_game = clone_go.GetComponent<Game>();
+
+                var last_piece_aux = clone_game.board.pieces.Get_piece_in_game(this.pieces.Get_id_in_game(this.game.last_piece_moved).Value);
+                var last_square_aux = clone_game.board.squares.Get_square_in_game(this.game.last_square_moved);
+                clone_game.board.Piece_to_square(last_piece_aux, last_square_aux);
+
+                //clone_game.Default_values_aux();
+                
+                
+                var piece_aux = clone_game.board.pieces.Get_piece_in_game(this.pieces.Get_id_in_game(piece).Value);
+                var square_aux = clone_game.board.squares.Get_square_in_game(square);
+
+                //var previous_square_aux = piece_aux.square;
+                //bool previous_moved=false;
+                //var previous_piece_square_aux = square_aux.piece;
+
+
+                clone_game.board.Piece_to_square(piece_aux, square_aux);
+
+                if (typeof(TMoved).IsAssignableFrom(piece_aux.GetType()))
+                {
+                    piece_aux.GetComponent<TMoved>().moved = true;
+                }
+
+                //clone_game.board.squares.board.game.Next_turn();
+                clone_game.is_white_turn = !clone_game.is_white_turn;
+                clone_game.board.Update_squares_attacked_in_game();
+
+                Debug.Log(piece_aux);
+                Debug.Log(square_aux);
+                Debug.Log(!clone_game.Theres_a_check());
+                //Debug.Log(!clone_game.Theres_a_check() || clone_game.kings_get_a_check.is_white != piece_aux.is_white);
+                // CONVERT king_gets_a_check TO A LIST OF KINGS
+                if (!clone_game.Theres_a_check() || (!clone_game.Theres_a_check_to_color(piece_aux.is_white)) )
                 {
                     list = this.Add_to_list_if_not_null(list, square);
                 }
-                //Destroy(game_aux);
+                if( square_aux.id_letter != ASquare.ID_G || square_aux.id_number != ASquare.ID_2 || !piece_aux.GetComponent<Black_queen>())
+                {
+                    Destroy(clone_game.gameObject);
+                }
+                
             }
             else
             {
@@ -290,6 +337,19 @@ public class Board : MonoBehaviour
     public void Default_values_pieces()
     {
         this.pieces.Set_default_values_in_game();
+    }
+
+    public Board Set_values(Board board_with_values)
+    {       
+        //this.squares = board_with_values.squares.Set_values(board_with_values.squares);
+        //this.pieces = board_with_values.pieces.Set_values(board_with_values.pieces);
+        foreach (APiece piece in this.pieces.Get_All_in_game())
+        {
+            //this.Piece_to_square(piece, piece.square);
+        }
+        //this.Rotate();
+        return board_with_values;
+        //return this;
     }
 
     void Awake()

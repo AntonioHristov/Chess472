@@ -5,13 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
+    // Choose between try to create Copy_game_values method (send 2 games, no use instance inside)
+    // or improve current code with comments, etc. When I write this I recommend this (the second one).
+    // Choose one of them to do first and probably the other one should be done next.
     private const bool WHITE_TURN = true;
     private const bool BLACK_TURN = false;
 
 
     public static GameObject auxiliar { get; set; }
-    public APiece last_piece_moved;
-    public ASquare last_square_moved;
 
 
     public Boxes boxes { get; set; }
@@ -19,6 +20,7 @@ public class Game : MonoBehaviour
     public bool is_white_turn;
     //public bool is_white_turn { get; set; }
     public bool is_finished { get; set; }
+    public bool is_clone { get; set; }
     public List<AKing> kings_get_a_check { get; set; }
 
 
@@ -29,6 +31,7 @@ public class Game : MonoBehaviour
     public void Default_values()
     {
         is_finished = true;
+        this.is_clone = false;
         this.kings_get_a_check = new List<AKing>();
         board.pieces.Set_default_values_in_game();
         board.squares.Set_default_values_in_game();
@@ -36,6 +39,8 @@ public class Game : MonoBehaviour
         board.Default_pieces_to_squares();
         board.pieces.Update_pieces_in_game();
         White_turn();
+        this.board.Update_squares_attacked_in_game();
+        this.board.pieces.Set_cache_empty_in_game();
 
         is_finished = false;
     }
@@ -43,19 +48,28 @@ public class Game : MonoBehaviour
     public void Next_turn()
     {
         this.is_white_turn = !this.is_white_turn;
-        this.board.Update_squares_attacked_in_game();
-        this.board.pieces.Set_cache_empty_in_game();
-
-        if (!this.Game_finished())
+        if (!this.is_clone)
         {
-            this.board.Rotate();
-        }
-    }
+            this.board.Update_squares_attacked_in_game();
+            this.board.pieces.Set_cache_empty_in_game();
 
-    public void Next_turn_auxiliar()
-    {
-        this.is_white_turn = !this.is_white_turn;
-        this.board.Update_squares_attacked_in_game();
+            if (!this.Game_finished())
+            {
+                this.board.Rotate();
+            }
+
+        }
+
+        Debug.Log("king posible moves");
+        Debug.Log(this.board.pieces.Get_All_in_game()[15].Posible_moves().Count);
+
+        
+
+        foreach (APiece piece in this.board.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_8).attacked_by)
+        {
+            Debug.Log("f8 attacked by: ");
+            Debug.Log(piece);
+        }
     }
 
     public void White_turn()
@@ -139,90 +153,22 @@ public class Game : MonoBehaviour
         if(GameObject.FindObjectsOfType<Game>().Length > 1)
         {
             var result = GameObject.Instantiate(this.gameObject);
+            result.GetComponent<Game>().board.pieces.Update_position_in_game();
 
             return result;
         }
         else
         {
             var result = GameObject.Instantiate(this.gameObject);
+            result.GetComponent<Game>().board.pieces.Update_position_in_game();
+
             return result;
         }
     }
 
-    // FIXME: Dont forget the case when you can promote pawns
-    public Game Make_a_move_in_a_cloned_game(APiece piece, ASquare square, GameObject clone_gameobject=null)
-    {
-        Game clone_game;
-        this.board.pieces.Update_pieces_in_game();
-      
-        if(!clone_gameobject)
-        {
-            clone_game = this.Clone_game().GetComponent<Game>();
-        }
-        else
-        {
-            clone_game = clone_gameobject.GetComponent<Game>();
-        }
-
-        var last_piece_aux = clone_game.board.pieces.Get_piece_in_game(this.board.pieces.Get_id_in_game(this.last_piece_moved).Value);
-        var last_square_aux = clone_game.board.squares.Get_square_in_game(this.last_square_moved);
-        if (last_piece_aux && last_square_aux)
-        {
-            clone_game.board.Piece_to_square(last_piece_aux, last_square_aux);
-        }
-
-
-        var piece_aux = clone_game.board.pieces.Get_piece_in_game(this.board.pieces.Get_id_in_game(piece).Value);
-        var square_aux = clone_game.board.squares.Get_square_in_game(square);
-
-
-        clone_game.board.Piece_to_square(piece_aux, square_aux);
-
-        if (typeof(TMoved).IsAssignableFrom(piece_aux.GetType()))
-        {
-            piece_aux.GetComponent<TMoved>().moved = true;
-        }
-
-        clone_game.is_white_turn = !clone_game.is_white_turn;
-        clone_game.board.Update_squares_attacked_in_game();
-
-        return clone_game;
-    }
-
-    public bool Theres_no_checks_to_me_after_move(APiece piece, ASquare square, GameObject clone_gameobject = null)
-    {
-        var clon_game_after_move = this.Make_a_move_in_a_cloned_game(piece, square, clone_gameobject);
-        return !clon_game_after_move.Theres_a_check() || (!clon_game_after_move.Theres_a_check_to_color(piece.is_white));
-    }
-
-    public APiece Get_in_cloned_game(APiece piece, GameObject clone_gameobject)
-    {
-        if(!piece || !clone_gameobject || !clone_gameobject.GetComponent<Game>())
-        {
-            return null;
-        }
-        else
-        {
-            return clone_gameobject.GetComponent<Game>().board.pieces.Get_piece_in_game(this.board.pieces.Get_id_in_game(piece).Value);
-        }
-    }
-
-    public ASquare Get_in_cloned_game(ASquare square, GameObject clone_gameobject)
-    {
-        if (!square || !clone_gameobject || !clone_gameobject.GetComponent<Game>())
-        {
-            return null;
-        }
-        else
-        {
-            return clone_gameobject.GetComponent<Game>().board.squares.Get_square_in_game(square);
-        }
-    }
-
-
     public bool Theres_a_check()
     {
-        return this.kings_get_a_check.Count != 0;
+        return this.kings_get_a_check != null && this.kings_get_a_check.Count != 0;
     }
 
     public bool Theres_a_check_to_color(bool is_white)
@@ -252,6 +198,7 @@ public class Game : MonoBehaviour
         }
         else
         {
+            this.is_clone = true;
             //this.Default_values_aux();
         }
 

@@ -30,7 +30,6 @@ public class Board : MonoBehaviour
     }
 
 
-
     public void Piece_to_square(APiece piece = null, ASquare square = null)
     {
         if (piece && square)
@@ -51,6 +50,124 @@ public class Board : MonoBehaviour
             square.piece = piece;
             piece.transform.position = square.transform.position;
         }
+    }
+
+    /// <summary>
+    /// Make a move
+    /// </summary>
+    /// <param name="piece"></param>
+    /// <param name="square_destination"></param>
+    /// <param name="by_user"></param>
+    /// <returns>The gameobject with Game component</returns>
+    public GameObject Make_a_move(APiece piece, ASquare square_destination, bool by_user)
+    {
+        if(piece != null && square_destination != null)
+        {
+            if (piece.GetComponent<APawn>())
+            {
+                // Trying to capture the target piece en passant , if its not been able to do it, then...
+                if (!piece.GetComponent<APawn>().Try_capture_en_passant(square_destination))
+                {
+                    // All pawns in game are not en passant target. This is because we want a pawn which is an en passant target only the first chance and not more
+                    this.pieces.Set_no_targets_en_passant_in_game();
+
+                    // if its pawn's first move and go 2 squares, is a target for en passant, if not not.
+                    piece.GetComponent<APawn>().Is_en_passant_target(square_destination);
+
+                    if (by_user && piece.GetComponent<APawn>().Next_advance_will_be_promotion())
+                    {
+                        piece.GetComponent<APawn>().Open_box_promotion();
+                    }
+                }
+            }
+            else if (piece.GetComponent<AKing>())
+            {
+                piece.GetComponent<AKing>().Move_rook_when_castle(square_destination);
+            }
+
+            this.squares.board.Piece_to_square(piece, square_destination);
+
+            if (typeof(TMoved).IsAssignableFrom(piece.GetType()))
+            {
+                piece.GetComponent<TMoved>().moved = true;
+            }
+
+            this.game.Next_turn();
+        }
+
+        return this.game.gameObject;
+    }
+
+    private GameObject Make_a_move_in_a_cloned_game(APiece piece, ASquare square, GameObject clone_gameobject = null)
+    {
+        if (!clone_gameobject)
+        {
+            clone_gameobject = this.game.Clone_game();
+        }
+
+        var piece_aux = piece.Get_in_cloned_game(clone_gameobject);
+        var square_aux = square.Get_in_cloned_game(clone_gameobject);
+
+        if (piece_aux != null && square_aux != null)
+        {        
+            //clone_gameobject = clone_gameobject.GetComponent<Game>().board.Make_a_move(piece_aux, square_aux, false);
+            clone_gameobject.GetComponent<Game>().board.Piece_to_square(piece_aux, square_aux);
+            clone_gameobject.GetComponent<Game>().is_white_turn = !clone_gameobject.GetComponent<Game>().is_white_turn;
+            clone_gameobject.GetComponent<Game>().board.Update_squares_attacked_in_game();
+            clone_gameobject.GetComponent<Game>().board.pieces.Set_cache_empty_in_game();
+        }
+
+        return clone_gameobject;
+    }
+
+    public GameObject[] Make_posible_moves_in_a_clon_game(APiece piece, ASquare square_destination)
+    {
+        var result = new List<GameObject>();
+        if (piece == null || square_destination == null)
+        {
+            result.Add(this.game.gameObject);
+        }
+        else
+        {
+            if (piece.GetComponent<APawn>() && piece.GetComponent<APawn>().Next_advance_will_be_promotion())
+            {
+                var game_knight_promote = this.Make_a_move_in_a_cloned_game(piece, square_destination);
+                var game_bishop_promote = this.Make_a_move_in_a_cloned_game(piece, square_destination);
+                var game_rook_promote = this.Make_a_move_in_a_cloned_game(piece, square_destination);
+                var game_queen_promote = this.Make_a_move_in_a_cloned_game(piece, square_destination);
+
+                var pawn_promoting_knight = piece.Get_in_cloned_game(game_knight_promote);
+                var pawn_promoting_bishop = piece.Get_in_cloned_game(game_bishop_promote);
+                var pawn_promoting_rook = piece.Get_in_cloned_game(game_rook_promote);
+                var pawn_promoting_queen = piece.Get_in_cloned_game(game_queen_promote);
+
+                if (piece.is_white)
+                {
+                    pawn_promoting_knight.GetComponent<APawn>().Promote(Sprites.Get_white_knight());
+                    pawn_promoting_bishop.GetComponent<APawn>().Promote(Sprites.Get_white_bishop());
+                    pawn_promoting_rook.GetComponent<APawn>().Promote(Sprites.Get_white_rook());
+                    pawn_promoting_queen.GetComponent<APawn>().Promote(Sprites.Get_white_queen());
+                }
+                else
+                {
+                    pawn_promoting_knight.GetComponent<APawn>().Promote(Sprites.Get_black_knight());
+                    pawn_promoting_bishop.GetComponent<APawn>().Promote(Sprites.Get_black_bishop());
+                    pawn_promoting_rook.GetComponent<APawn>().Promote(Sprites.Get_black_rook());
+                    pawn_promoting_queen.GetComponent<APawn>().Promote(Sprites.Get_black_queen());
+                }
+
+                result.Add(game_knight_promote);
+                result.Add(game_bishop_promote);
+                result.Add(game_rook_promote);
+                result.Add(game_queen_promote);               
+            }
+            else
+            {
+                result.Add(this.Make_a_move_in_a_cloned_game(piece, square_destination));
+            }
+        }
+
+        return result.ToArray();
     }
 
     public void Update_squares_attacked(APiece[] pieces)
@@ -149,67 +266,27 @@ public class Board : MonoBehaviour
     /// <returns></returns>
     public List<ASquare> Add_to_list_if_can_move(List<ASquare> list, APiece piece, ASquare square)
     {
-        if (list != null && this.Check_can_move(piece,square) )
+        if (list != null && piece.is_alive && this.game.is_white_turn == piece.is_white && this.Check_can_move(piece,square) )
         {
-
-            if (this.game.Theres_a_check() && !piece.GetComponent<AKing>())
+            if (this.game.Theres_a_check())
             {
-                /*
-                if(piece.GetComponent<APawn>() && piece.GetComponent<APawn>().direction.Forward(square, -7))
+                piece.Add_cache();
+                var posible_moves = this.Make_posible_moves_in_a_clon_game(piece, square);
+
+                foreach (GameObject move in posible_moves)
                 {
-                    //The move is a promotion, so I check all promotion posibilities 
-                    if(piece.is_white)
-                    {
-                        if (piece.GetComponent<APawn>().Theres_no_checks_to_me_after_promote(Sprites.Get_white_knight()))
-                        {
-                            list = this.Add_to_list_if_not_null(list, square);
-                            piece.Set_cache(square);
-                        }
-                        if (piece.GetComponent<APawn>().Theres_no_checks_to_me_after_promote(Sprites.Get_white_bishop()))
-                        {
-                            list = this.Add_to_list_if_not_null(list, square);
-                            piece.Set_cache(square);
-                        }
-                    }
-                    else
-                    {
-
-                    }
-
-
-
-                }
-                else
-                {
-                    if (this.game.Theres_no_checks_to_me_after_move(piece, square))
+                    if (!move.GetComponent<Game>().Theres_a_check())
                     {
                         list = this.Add_to_list_if_not_null(list, square);
-                        piece.Set_cache(square);
+                        piece.Add_cache(square);
                     }
                 }
-                */
-
-                if (this.game.Theres_no_checks_to_me_after_move(piece, square))
-                {
-                    list = this.Add_to_list_if_not_null(list, square);
-                    piece.Set_cache(square);
-                }
-
-
-                /*
-                if( square_aux.id_letter != ASquare.ID_G || square_aux.id_number != ASquare.ID_2 || !piece_aux.GetComponent<Black_queen>())
-                {
-                    DestroyImmediate(clone_game.gameObject);
-                }
-                */
-
             }
             else
             {
                 list = this.Add_to_list_if_not_null(list, square);
-                piece.Set_cache(square);
+                piece.Add_cache(square);
             }
-            //list = this.Add_to_list_if_not_null(list, square);
         }
         return list;
     }
@@ -293,12 +370,16 @@ public class Board : MonoBehaviour
     {
         var pieces = this.pieces.Get_All_in_game();
 
-        //TEST CLONED GAME WHEN PAWN PROMOTE
+        /*
+        pieces[1].Revive(this.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_7));//WP
+        pieces[1].GetComponent<APawn>().moved = true;//WP
 
-        pieces[14].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_2));
-        pieces[15].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_3));
-        pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_G, ASquare.ID_8));
-        pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_2));
+
+        pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_4));//BQ
+
+        pieces[15].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_8));//WKI
+        pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_6));//BKI
+        */
 
         /*
         pieces[14].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_2));
@@ -308,7 +389,7 @@ public class Board : MonoBehaviour
         */
 
 
-        /*
+        
         pieces[0].Revive(this.squares.Get_square_in_game (ASquare.ID_A, ASquare.ID_2));
         pieces[1].Revive(this.squares.Get_square_in_game (ASquare.ID_B, ASquare.ID_2));
         pieces[2].Revive(this.squares.Get_square_in_game (ASquare.ID_C, ASquare.ID_2));
@@ -341,26 +422,12 @@ public class Board : MonoBehaviour
         pieces[28].Revive(this.squares.Get_square_in_game(ASquare.ID_C, ASquare.ID_8));
         pieces[29].Revive(this.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_8));
         pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_8));
-        pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_8));
-        */
+        pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_8));       
     }
 
     public void Default_values_pieces()
     {
         this.pieces.Set_default_values_in_game();
-    }
-
-    public Board Set_values(Board board_with_values)
-    {       
-        //this.squares = board_with_values.squares.Set_values(board_with_values.squares);
-        //this.pieces = board_with_values.pieces.Set_values(board_with_values.pieces);
-        foreach (APiece piece in this.pieces.Get_All_in_game())
-        {
-            //this.Piece_to_square(piece, piece.square);
-        }
-        //this.Rotate();
-        return board_with_values;
-        //return this;
     }
 
     void Awake()

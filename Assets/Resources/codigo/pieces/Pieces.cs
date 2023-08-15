@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Pieces : MonoBehaviour
 {
+    public const int ID_ERROR = -1;
     private APiece[] in_game = new APiece[0];
 
     public Board board { get; set; }
@@ -49,6 +50,35 @@ public class Pieces : MonoBehaviour
 
     #endregion
 
+    #region Update
+    public void Update_pieces_in_game()
+    {
+        this.in_game = this.GetComponentsInChildren<APiece>();
+    }
+
+    public APiece[] Update_position(APiece[] pieces_list)
+    {
+        var result = new List<APiece>();
+        if (pieces_list != null)
+        {
+            foreach (APiece piece in pieces_list)
+            {
+                if(piece.square)
+                {
+                    piece.transform.position = piece.square.transform.position;
+                }
+
+            }
+        }
+        return result.ToArray();
+    }
+
+    public APiece[] Update_position_in_game()
+    {
+        return this.Update_position(this.in_game);
+    }
+    #endregion
+
     public APiece[] Get_All_in_game()
     {
         return this.in_game;
@@ -57,6 +87,30 @@ public class Pieces : MonoBehaviour
     public void Set_All_in_game(APiece[] pieces_list)
     {
         this.in_game = pieces_list;
+    }
+
+    public APiece Get_piece_in_game(int id)
+    {
+        if (id < 0 || id >= this.Get_All_in_game().Length)
+        {
+            return null;
+        }
+        else
+        {
+            return this.Get_All_in_game()[id];
+        }
+    }
+
+    public APiece Get_in_cloned_game(APiece piece, GameObject clone_gameobject)
+    {
+        if (!piece || !clone_gameobject || !clone_gameobject.GetComponent<Game>())
+        {
+            return null;
+        }
+        else
+        {
+            return clone_gameobject.GetComponent<Game>().board.pieces.Get_piece_in_game(piece.id);
+        }
     }
 
     public APiece[] Get_alives(APiece[] pieces_list)
@@ -325,6 +379,24 @@ public class Pieces : MonoBehaviour
         return this.Set_cache_empty(this.Get_All_in_game());
     }
 
+    public APiece[] Set_id(APiece[] pieces)
+    {
+        var result = new List<APiece>();
+        if (pieces != null)
+        {
+            for (int i = 0; i < pieces.Length; i++)
+            {
+                pieces[i].id = i;
+            }
+        }
+        return result.ToArray();
+    }
+
+    public APiece[] Set_id_in_game()
+    {
+        return this.Set_id(this.Get_All_in_game());
+    }
+
     public void Set_default_values(APiece[] pieces_list)
     {
         foreach (APiece piece in pieces_list)
@@ -336,11 +408,6 @@ public class Pieces : MonoBehaviour
     public void Set_default_values_in_game()
     {
         this.Set_default_values(this.in_game);
-    }
-
-    public void Update_pieces_in_game()
-    {
-        this.in_game = this.GetComponentsInChildren<APiece>();     
     }
 
     #endregion
@@ -588,33 +655,14 @@ public class Pieces : MonoBehaviour
     #endregion
 
 
-    public int? Get_id_in_game(APiece piece)
-    {
-        for(int i=0; i< this.Get_All_in_game().Length;i++)
-        {
-            if(this.Get_All_in_game()[i] == piece)
-            {
-                return i;
-            }
-        }
-        return null;
-    }
-
-    public APiece Get_piece_in_game(int id)
-    {
-        if(id < 0 || !(id < this.Get_All_in_game().Length) )
-        {
-            return null;
-        }
-        else
-        {
-            return this.Get_All_in_game()[id];
-        }
-    }
-
     public void Awake()
     {
         this.in_game = this.GetComponentsInChildren<APiece>();
         this.board = this.GetComponentInParent<Board>();
+        if (GameObject.FindObjectsOfType<Game>().Length == 1)
+        {
+            this.Set_id_in_game();
+        }
+        
     }
 }

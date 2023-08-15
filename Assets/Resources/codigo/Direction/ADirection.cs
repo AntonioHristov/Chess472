@@ -25,6 +25,46 @@ public abstract class ADirection : MonoBehaviour
 
 
 
+    public virtual ASquare Forward_Left_diagonal(ASquare square, int number)
+    {
+        return this.Forward_Left(square, number, number);
+    }
+
+    public virtual ASquare Forward_Left_diagonal(APiece piece, int number)
+    {
+        return this.Forward_Left(piece.square, number, number);
+    }
+
+    public virtual ASquare Forward_Right_diagonal(ASquare square, int number)
+    {
+        return this.Forward_Right(square, number, number);
+    }
+
+    public virtual ASquare Forward_Right_diagonal(APiece piece, int number)
+    {
+        return this.Forward_Right(piece.square, number, number);
+    }
+
+    public virtual ASquare Back_Left_diagonal(ASquare square, int number)
+    {
+        return this.Back_Left(square, number, number);
+    }
+
+    public virtual ASquare Back_Left_diagonal(APiece piece, int number)
+    {
+        return this.Back_Left(piece.square, number, number);
+    }
+
+    public virtual ASquare Back_Right_diagonal(ASquare square, int number)
+    {
+        return this.Back_Right(square, number, number);
+    }
+
+    public virtual ASquare Back_Right_diagonal(APiece piece, int number)
+    {
+        return this.Back_Right(piece.square, number, number);
+    }
+
 
     public virtual ASquare[] Forward(ASquare square)
     {

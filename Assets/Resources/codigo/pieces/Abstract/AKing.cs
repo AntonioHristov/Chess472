@@ -43,12 +43,32 @@ public abstract class AKing : APiece, TMoved, TDirection
 
     public override List<ASquare> Posible_moves()
     {
-        var result = new List<ASquare>();
+        if (!this.is_alive)
+        {
+            return new List<ASquare>();
+        }
+        else
+        {
+            if (!base.Is_cache_empty())
+            {
+                return base.cache_posible_moves;
+            }
+            else
+            {
+                var result = new List<ASquare>();
 
-        result = this.Add_to_list_if_can_move(result, this.Squares_which_this_piece_see().ToArray());
-        result = this.Add_to_list_if_can_castle(result);
+                result = this.Add_to_list_if_can_move(result, this.Squares_which_this_piece_see().ToArray());
+                result = this.Add_to_list_if_can_castle(result);
 
-        return result;
+
+                result = this.pieces.board.Add_to_list_if_can_move(new List<ASquare>(), this, result.ToArray());
+
+                base.Add_cache(result);
+                return result;
+            }
+        }
+
+
     }
 
     public bool Check_is_no_attacked_by_enemy(ASquare square)
@@ -74,7 +94,7 @@ public abstract class AKing : APiece, TMoved, TDirection
     {
         if (list != null && square != null)
         {
-            if( !square.piece && this.Check_is_no_attacked_by_enemy(square) )
+            if( (!square.piece || square.piece.is_white!=this.is_white) && this.Check_is_no_attacked_by_enemy(square) )
             {
                 list.Add(square);
             }

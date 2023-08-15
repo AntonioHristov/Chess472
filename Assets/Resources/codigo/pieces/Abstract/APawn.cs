@@ -9,6 +9,7 @@ public abstract class APawn : APiece, TMoved, TDirection
     public abstract ADirection direction { get; set; }
     public bool is_en_passant_target { get; set; }
     public bool moved { get; set; }
+    public const int SQUARES_FORWARD_PROMOTION = 7;
 
 
     new public void Awake()
@@ -45,31 +46,8 @@ public abstract class APawn : APiece, TMoved, TDirection
             return result;
         }
 
-        if (this.direction.GetComponent<Up>())
-        {
-            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Up_left(1, 1));
-            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Up_right(1, 1));
-        }
-        else
-        if (this.direction.GetComponent<Down>())
-        {
-            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Down_left(1, 1));
-            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Down_right(1, 1));
-        }
-        else
-        if (this.direction.GetComponent<Left>())
-        {
-            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Up_left(1, 1));
-            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Down_left(1, 1));
-        }
-        else
-        //if (this.direction.GetComponent<Right>())
-        {
-            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Up_right(1, 1));
-            result = this.pieces.board.Add_to_list_if_not_null(result, this.square.Down_right(1, 1));
-        }
-
-
+        result = this.pieces.board.Add_to_list_if_not_null(result, this.direction.Forward_Left_diagonal(this,1));
+        result = this.pieces.board.Add_to_list_if_not_null(result, this.direction.Forward_Right_diagonal(this,1));
 
         return result;
     }
@@ -82,9 +60,9 @@ public abstract class APawn : APiece, TMoved, TDirection
         }
         else
         {
-            if (!this.Is_cache_empty())
+            if (!base.Is_cache_empty())
             {
-                return this.cache_posible_moves;
+                return base.cache_posible_moves;
             }
             else
             {
@@ -104,6 +82,12 @@ public abstract class APawn : APiece, TMoved, TDirection
                 }
 
                 result = this.Add_to_list_if_en_passant(result);
+
+
+
+                result = this.pieces.board.Add_to_list_if_can_move(new List<ASquare>(), this, result.ToArray());
+
+                base.Add_cache(result);
 
                 return result;
             }
@@ -208,7 +192,17 @@ public abstract class APawn : APiece, TMoved, TDirection
         return this.is_en_passant_target;
     }
 
-   
+    public bool Next_advance_will_be_promotion()
+    {
+        return this.direction.Forward(this, 1 - SQUARES_FORWARD_PROMOTION) != null;
+    }
+
+    public bool This_square_is_a_promotion()
+    {
+        return this.direction.Forward(this, 0 - SQUARES_FORWARD_PROMOTION) != null;
+    }
+
+
 
     public void Open_box_promotion()
     {
@@ -224,87 +218,104 @@ public abstract class APawn : APiece, TMoved, TDirection
 
     // FIXME. Try to find the way to not repeat that same code
 
-    public void Add_component_promotion(Sprite sprite_promotion)
+    public APiece Add_component_promotion(Sprite sprite_promotion)
     {
+        this.GetComponent<Image>().sprite = sprite_promotion;
         if (sprite_promotion == Sprites.Get_white_queen())
         {
             this.gameObject.AddComponent<White_queen>();
             this.GetComponent<White_queen>().is_promoted = true;
             this.GetComponent<White_queen>().is_alive = true;
+            base.GetComponent<White_queen>().id = base.GetComponent<White_pawn>().id;
             this.GetComponent<White_queen>().square = this.GetComponent<White_pawn>().square;
             this.GetComponent<White_queen>().square.piece = this.GetComponent<White_queen>();
             this.GetComponent<White_queen>().when_die = this.GetComponent<White_pawn>().when_die;
+            return this.GetComponent<White_queen>();
         }
         else if (sprite_promotion == Sprites.Get_white_rook())
         {
             this.gameObject.AddComponent<White_rook>();
             this.GetComponent<White_rook>().is_promoted = true;
             this.GetComponent<White_rook>().is_alive = true;
+            base.GetComponent<White_rook>().id = base.GetComponent<White_pawn>().id;
             this.GetComponent<White_rook>().square = this.GetComponent<White_pawn>().square;
             this.GetComponent<White_rook>().square.piece = this.GetComponent<White_rook>();
             this.GetComponent<White_rook>().when_die = this.GetComponent<White_pawn>().when_die;
+            return this.GetComponent<White_rook>();
         }
         else if (sprite_promotion == Sprites.Get_white_bishop())
         {
             this.gameObject.AddComponent<White_bishop>();
             this.GetComponent<White_bishop>().is_promoted = true;
             this.GetComponent<White_bishop>().is_alive = true;
+            base.GetComponent<White_bishop>().id = base.GetComponent<White_pawn>().id;
             this.GetComponent<White_bishop>().square = this.GetComponent<White_pawn>().square;
             this.GetComponent<White_bishop>().square.piece = this.GetComponent<White_bishop>();
             this.GetComponent<White_bishop>().when_die = this.GetComponent<White_pawn>().when_die;
+            return this.GetComponent<White_bishop>();
         }
         else if (sprite_promotion == Sprites.Get_white_knight())
         {
             this.gameObject.AddComponent<White_knight>();
             this.GetComponent<White_knight>().is_promoted = true;
             this.GetComponent<White_knight>().is_alive = true;
+            base.GetComponent<White_knight>().id = base.GetComponent<White_pawn>().id;
             this.GetComponent<White_knight>().square = this.GetComponent<White_pawn>().square;
             this.GetComponent<White_knight>().square.piece = this.GetComponent<White_knight>();
             this.GetComponent<White_knight>().when_die = this.GetComponent<White_pawn>().when_die;
+            return this.GetComponent<White_knight>();
         }
         else if (sprite_promotion == Sprites.Get_black_queen())
         {
             this.gameObject.AddComponent<Black_queen>();
             this.GetComponent<Black_queen>().is_promoted = true;
             this.GetComponent<Black_queen>().is_alive = true;
+            base.GetComponent<Black_queen>().id = base.GetComponent<Black_pawn>().id;
             this.GetComponent<Black_queen>().square = this.GetComponent<Black_pawn>().square;
             this.GetComponent<Black_queen>().square.piece = this.GetComponent<Black_queen>();
             this.GetComponent<Black_queen>().when_die = this.GetComponent<Black_pawn>().when_die;
+            return this.GetComponent<Black_queen>();
         }
         else if (sprite_promotion == Sprites.Get_black_rook())
         {
             this.gameObject.AddComponent<Black_rook>();
             this.GetComponent<Black_rook>().is_promoted = true;
             this.GetComponent<Black_rook>().is_alive = true;
+            base.GetComponent<Black_rook>().id = base.GetComponent<Black_pawn>().id;
             this.GetComponent<Black_rook>().square = this.GetComponent<Black_pawn>().square;
             this.GetComponent<Black_rook>().square.piece = this.GetComponent<Black_rook>();
             this.GetComponent<Black_rook>().when_die = this.GetComponent<Black_pawn>().when_die;
+            return this.GetComponent<Black_rook>();
         }
         else if (sprite_promotion == Sprites.Get_black_bishop())
         {
             this.gameObject.AddComponent<Black_bishop>();
             this.GetComponent<Black_bishop>().is_promoted = true;
             this.GetComponent<Black_bishop>().is_alive = true;
+            base.GetComponent<Black_bishop>().id = base.GetComponent<Black_pawn>().id;
             this.GetComponent<Black_bishop>().square = this.GetComponent<Black_pawn>().square;
             this.GetComponent<Black_bishop>().square.piece = this.GetComponent<Black_bishop>();
             this.GetComponent<Black_bishop>().when_die = this.GetComponent<Black_pawn>().when_die;
+            return this.GetComponent<Black_bishop>();
         }
         else //if (sprite_promotion == Sprites.Get_black_knight())
         {
             this.gameObject.AddComponent<Black_knight>();
             this.GetComponent<Black_knight>().is_promoted = true;
             this.GetComponent<Black_knight>().is_alive = true;
+            base.GetComponent<Black_knight>().id = base.GetComponent<Black_pawn>().id;
             this.GetComponent<Black_knight>().square = this.GetComponent<Black_pawn>().square;
             this.GetComponent<Black_knight>().square.piece = this.GetComponent<Black_knight>();
             this.GetComponent<Black_knight>().when_die = this.GetComponent<Black_pawn>().when_die;
+            return this.GetComponent<Black_knight>();
         }
 
-        this.GetComponent<Image>().sprite = sprite_promotion;
+        
     }
 
     #endregion
 
-    public void Promote(Sprite sprite_promotion)
+    public APiece Promote(Sprite sprite_promotion)
     {
         this.Add_component_promotion(sprite_promotion);
 
@@ -317,22 +328,9 @@ public abstract class APawn : APiece, TMoved, TDirection
             DestroyImmediate(this.gameObject.GetComponent<Black_pawn>());
         }
         this.pieces.Update_pieces_in_game();
+        return this;
     }
-
-    /*
-    public bool Theres_no_checks_to_me_after_promote(Sprite sprite_promotion)
-    {
-        var gameobject_clone_game = this.pieces.board.game.Clone_game();
-        var square_promotion = this.direction.Forward(this.direction.Forward(this.square,1), -7);
-
-        var this_in_cloned_game = this.pieces.board.game.Get_in_cloned_game(this, gameobject_clone_game);
-        var square_in_cloned_game = this.pieces.board.game.Get_in_cloned_game(square_promotion, gameobject_clone_game);
-
-        this_in_cloned_game.GetComponent<APawn>().Promote(sprite_promotion);
-
-        return this.pieces.board.game.Theres_no_checks_to_me_after_move(this_in_cloned_game, square_in_cloned_game, gameobject_clone_game);
-    }
-    */
+    
 
     public override void Default_values()
     {

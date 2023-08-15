@@ -15,6 +15,7 @@ public abstract class APiece : MonoBehaviour
     public ASquare square;
     public abstract bool is_white { get; set; }
     public bool is_alive;
+    public int id;
     public List<ASquare> cache_posible_moves { get; set; }
 
 
@@ -65,9 +66,9 @@ public abstract class APiece : MonoBehaviour
     }
 
     public void Die()
-    { this.is_alive = false; this.GetComponentInParent<Board>().Piece_to_square(this, when_die); }
+    { this.is_alive = false; this.pieces.board.Piece_to_square(this, this.when_die); }
     public void Revive(ASquare square)
-    { this.is_alive = true; this.GetComponentInParent<Board>().Piece_to_square(this, square); }
+    { this.is_alive = true; this.pieces.board.Piece_to_square(this, square); }
 
     public void Set_sprite(Sprite sprite)
     {
@@ -79,7 +80,7 @@ public abstract class APiece : MonoBehaviour
     }
 
     public bool Is_cache_empty()
-    { return this.cache_posible_moves.Count == 0; }
+    { return this.cache_posible_moves == null; }
 
     public bool Theres_in_cache(ASquare square)
     {
@@ -98,19 +99,59 @@ public abstract class APiece : MonoBehaviour
         return this.cache_posible_moves;
     }
 
-    public void Set_cache(ASquare square)
+
+    /// <summary>
+    /// Because we want 0 squares in cache and empty is not the same
+    /// </summary>
+    public void Add_cache()
     {
-        if(square != null && this.cache_posible_moves != null && !this.Theres_in_cache(square))
+        if (this.cache_posible_moves == null)
         {
-            this.cache_posible_moves.Add(square);
+            this.cache_posible_moves = new List<ASquare>();
+        }
+    }
+
+    public void Add_cache(ASquare square)
+    {
+        this.Add_cache();
+        if(!this.Theres_in_cache(square))
+        {
+            if (square != null)
+            {
+                this.cache_posible_moves.Add(square);
+            }
+        }            
+    }
+
+    public void Add_cache(List<ASquare> squares)
+    {
+        if (this.cache_posible_moves == null)
+        {
+            this.cache_posible_moves = new List<ASquare>();
+        }
+        foreach (ASquare square in squares)
+        {
+            this.Add_cache(square);
         }
     }
 
     public void Set_cache_empty()
     {
-        this.cache_posible_moves = new List<ASquare>();
+        this.cache_posible_moves = null;
     }
 
+
+    public APiece Get_in_cloned_game(GameObject clone_gameobject)
+    {
+        if (!clone_gameobject || !clone_gameobject.GetComponent<Game>())
+        {
+            return null;
+        }
+        else
+        {
+            return clone_gameobject.GetComponent<Game>().board.pieces.Get_piece_in_game(this.id);
+        }
+    }
 
 
 
@@ -119,13 +160,15 @@ public abstract class APiece : MonoBehaviour
     public void Awake()
     {
         pieces = this.GetComponentInParent<Pieces>();
+
+    }
+
+    public void Start()
+    {
         if (GameObject.FindObjectsOfType<Game>().Length == 1)
         {
-            this.is_alive = false;
+            //this.Die();
             this.Set_cache_empty();
         }
-        
-
-
     }
 }

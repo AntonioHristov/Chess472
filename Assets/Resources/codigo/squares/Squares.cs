@@ -57,6 +57,18 @@ public class Squares : MonoBehaviour
         this.in_game = new_squares_in_game;
     }
 
+    public ASquare Get_in_cloned_game(ASquare square, GameObject clone_gameobject)
+    {
+        if (!square || !clone_gameobject || !clone_gameobject.GetComponent<Game>())
+        {
+            return null;
+        }
+        else
+        {
+            return clone_gameobject.GetComponent<Game>().board.squares.Get_square_in_game(square);
+        }
+    }
+
     public List<ASquare> Add_to_list_squares(List<ASquare> list, ASquare[] squares)
     {
         if (list != null && squares != null)

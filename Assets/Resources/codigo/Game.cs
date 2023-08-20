@@ -8,8 +8,12 @@ public class Game : MonoBehaviour
     // Choose between try to create Copy_game_values method (send 2 games, no use instance inside)
     // or improve current code with comments, etc. When I write this I recommend this (the second one).
     // Choose one of them to do first and probably the other one should be done next.
+    public const int DEPTH_CLONE_CHECK = 0;
+    public const int DEPTH_CLONE_DEFAULT = 2;
+
     private const bool WHITE_TURN = true;
     private const bool BLACK_TURN = false;
+
 
 
     public static GameObject auxiliar { get; set; }
@@ -20,7 +24,8 @@ public class Game : MonoBehaviour
     public bool is_white_turn;
     //public bool is_white_turn { get; set; }
     public bool is_finished { get; set; }
-    public bool is_clone { get; set; }
+    public bool is_clone;
+    public int depth_clone;
     public List<AKing> kings_get_a_check { get; set; }
 
 
@@ -32,6 +37,7 @@ public class Game : MonoBehaviour
     {
         is_finished = true;
         this.is_clone = false;
+        this.depth_clone = Game.DEPTH_CLONE_DEFAULT;
         this.kings_get_a_check = new List<AKing>();
         board.pieces.Set_default_values_in_game();
         board.squares.Set_default_values_in_game();
@@ -48,27 +54,12 @@ public class Game : MonoBehaviour
     public void Next_turn()
     {
         this.is_white_turn = !this.is_white_turn;
-        if (!this.is_clone)
+        this.board.Update_squares_attacked_in_game();
+        this.board.pieces.Set_cache_empty_in_game();
+
+        if (!this.Game_finished())
         {
-            this.board.Update_squares_attacked_in_game();
-            this.board.pieces.Set_cache_empty_in_game();
-
-            if (!this.Game_finished())
-            {
-                this.board.Rotate();
-            }
-
-        }
-
-        Debug.Log("king posible moves");
-        Debug.Log(this.board.pieces.Get_All_in_game()[15].Posible_moves().Count);
-
-        
-
-        foreach (APiece piece in this.board.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_8).attacked_by)
-        {
-            Debug.Log("f8 attacked by: ");
-            Debug.Log(piece);
+            this.board.Rotate();
         }
     }
 
@@ -150,25 +141,33 @@ public class Game : MonoBehaviour
     public GameObject Clone_game()
     {
         Debug.Log("CREATED");
-        if(GameObject.FindObjectsOfType<Game>().Length > 1)
+        if(this.Theres_depth())
         {
             var result = GameObject.Instantiate(this.gameObject);
+            result.GetComponent<Game>().depth_clone--;
             result.GetComponent<Game>().board.pieces.Update_position_in_game();
 
             return result;
         }
         else
         {
-            var result = GameObject.Instantiate(this.gameObject);
-            result.GetComponent<Game>().board.pieces.Update_position_in_game();
-
-            return result;
+            return null;
         }
     }
 
     public bool Theres_a_check()
     {
         return this.kings_get_a_check != null && this.kings_get_a_check.Count != 0;
+    }
+
+    public bool Theres_depth()
+    {
+        return this.depth_clone > 0;
+    }
+
+    public bool Theres_depth_check()
+    {
+        return Game.DEPTH_CLONE_DEFAULT - Game.DEPTH_CLONE_CHECK == this.depth_clone ;
     }
 
     public bool Theres_a_check_to_color(bool is_white)

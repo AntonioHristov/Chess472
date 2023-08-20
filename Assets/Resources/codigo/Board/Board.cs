@@ -61,8 +61,21 @@ public class Board : MonoBehaviour
     /// <returns>The gameobject with Game component</returns>
     public GameObject Make_a_move(APiece piece, ASquare square_destination, bool by_user)
     {
-        if(piece != null && square_destination != null)
+        
+        if (piece != null && square_destination != null)
         {
+            /* 
+             * This if and unclick is because when the user clicks an square and its a check, 
+             * first I create some clons making the posible moves to know if I get a check after these moves
+             * and in these moves in clons which moves are not by user, the square of the piece is
+             * clicked because before creating a clon the user clicked the square's piece,
+             * so I unclick these squares in the clon games but not in the main game.
+            */
+            if(!by_user)
+            {
+                piece.square.Unclick();
+            }
+            
             if (piece.GetComponent<APawn>())
             {
                 // Trying to capture the target piece en passant , if its not been able to do it, then...
@@ -84,16 +97,20 @@ public class Board : MonoBehaviour
             {
                 piece.GetComponent<AKing>().Move_rook_when_castle(square_destination);
             }
+            
 
             this.squares.board.Piece_to_square(piece, square_destination);
 
+            
             if (typeof(TMoved).IsAssignableFrom(piece.GetType()))
             {
                 piece.GetComponent<TMoved>().moved = true;
             }
+            
 
             this.game.Next_turn();
         }
+        
 
         return this.game.gameObject;
     }
@@ -103,6 +120,10 @@ public class Board : MonoBehaviour
         if (!clone_gameobject)
         {
             clone_gameobject = this.game.Clone_game();
+            if(clone_gameobject == null)
+            {
+                return null;
+            }
         }
 
         var piece_aux = piece.Get_in_cloned_game(clone_gameobject);
@@ -110,11 +131,7 @@ public class Board : MonoBehaviour
 
         if (piece_aux != null && square_aux != null)
         {        
-            //clone_gameobject = clone_gameobject.GetComponent<Game>().board.Make_a_move(piece_aux, square_aux, false);
-            clone_gameobject.GetComponent<Game>().board.Piece_to_square(piece_aux, square_aux);
-            clone_gameobject.GetComponent<Game>().is_white_turn = !clone_gameobject.GetComponent<Game>().is_white_turn;
-            clone_gameobject.GetComponent<Game>().board.Update_squares_attacked_in_game();
-            clone_gameobject.GetComponent<Game>().board.pieces.Set_cache_empty_in_game();
+            clone_gameobject = clone_gameobject.GetComponent<Game>().board.Make_a_move(piece_aux, square_aux, false);
         }
 
         return clone_gameobject;
@@ -125,7 +142,8 @@ public class Board : MonoBehaviour
         var result = new List<GameObject>();
         if (piece == null || square_destination == null)
         {
-            result.Add(this.game.gameObject);
+            //ERROR
+            return null;
         }
         else
         {
@@ -136,34 +154,52 @@ public class Board : MonoBehaviour
                 var game_rook_promote = this.Make_a_move_in_a_cloned_game(piece, square_destination);
                 var game_queen_promote = this.Make_a_move_in_a_cloned_game(piece, square_destination);
 
-                var pawn_promoting_knight = piece.Get_in_cloned_game(game_knight_promote);
-                var pawn_promoting_bishop = piece.Get_in_cloned_game(game_bishop_promote);
-                var pawn_promoting_rook = piece.Get_in_cloned_game(game_rook_promote);
-                var pawn_promoting_queen = piece.Get_in_cloned_game(game_queen_promote);
-
-                if (piece.is_white)
+                if(!game_knight_promote || !game_bishop_promote || !game_rook_promote || !game_queen_promote)
                 {
-                    pawn_promoting_knight.GetComponent<APawn>().Promote(Sprites.Get_white_knight());
-                    pawn_promoting_bishop.GetComponent<APawn>().Promote(Sprites.Get_white_bishop());
-                    pawn_promoting_rook.GetComponent<APawn>().Promote(Sprites.Get_white_rook());
-                    pawn_promoting_queen.GetComponent<APawn>().Promote(Sprites.Get_white_queen());
+                    //ERROR
+                    return null;
                 }
                 else
                 {
-                    pawn_promoting_knight.GetComponent<APawn>().Promote(Sprites.Get_black_knight());
-                    pawn_promoting_bishop.GetComponent<APawn>().Promote(Sprites.Get_black_bishop());
-                    pawn_promoting_rook.GetComponent<APawn>().Promote(Sprites.Get_black_rook());
-                    pawn_promoting_queen.GetComponent<APawn>().Promote(Sprites.Get_black_queen());
-                }
+                    var pawn_promoting_knight = piece.Get_in_cloned_game(game_knight_promote);
+                    var pawn_promoting_bishop = piece.Get_in_cloned_game(game_bishop_promote);
+                    var pawn_promoting_rook = piece.Get_in_cloned_game(game_rook_promote);
+                    var pawn_promoting_queen = piece.Get_in_cloned_game(game_queen_promote);
 
-                result.Add(game_knight_promote);
-                result.Add(game_bishop_promote);
-                result.Add(game_rook_promote);
-                result.Add(game_queen_promote);               
+                    if (piece.is_white)
+                    {
+                        pawn_promoting_knight.GetComponent<APawn>().Promote(Sprites.Get_white_knight());
+                        pawn_promoting_bishop.GetComponent<APawn>().Promote(Sprites.Get_white_bishop());
+                        pawn_promoting_rook.GetComponent<APawn>().Promote(Sprites.Get_white_rook());
+                        pawn_promoting_queen.GetComponent<APawn>().Promote(Sprites.Get_white_queen());
+                    }
+                    else
+                    {
+                        pawn_promoting_knight.GetComponent<APawn>().Promote(Sprites.Get_black_knight());
+                        pawn_promoting_bishop.GetComponent<APawn>().Promote(Sprites.Get_black_bishop());
+                        pawn_promoting_rook.GetComponent<APawn>().Promote(Sprites.Get_black_rook());
+                        pawn_promoting_queen.GetComponent<APawn>().Promote(Sprites.Get_black_queen());
+                    }
+
+                    result.Add(game_knight_promote);
+                    result.Add(game_bishop_promote);
+                    result.Add(game_rook_promote);
+                    result.Add(game_queen_promote);
+                }            
             }
             else
             {
-                result.Add(this.Make_a_move_in_a_cloned_game(piece, square_destination));
+                var game_clone_result = this.Make_a_move_in_a_cloned_game(piece, square_destination);
+                if(!game_clone_result)
+                {
+                    //ERROR
+                    return null;
+                }
+                else
+                {
+                    result.Add(game_clone_result);
+                }
+
             }
         }
 
@@ -268,17 +304,20 @@ public class Board : MonoBehaviour
     {
         if (list != null && piece.is_alive && this.game.is_white_turn == piece.is_white && this.Check_can_move(piece,square) )
         {
-            if (this.game.Theres_a_check())
+            if (this.game.Theres_depth_check() && this.game.Theres_a_check())
             {
                 piece.Add_cache();
                 var posible_moves = this.Make_posible_moves_in_a_clon_game(piece, square);
 
-                foreach (GameObject move in posible_moves)
+                if (posible_moves != null)
                 {
-                    if (!move.GetComponent<Game>().Theres_a_check())
+                    foreach (GameObject move in posible_moves)
                     {
-                        list = this.Add_to_list_if_not_null(list, square);
-                        piece.Add_cache(square);
+                        if (!move.GetComponent<Game>().Theres_a_check())
+                        {
+                            list = this.Add_to_list_if_not_null(list, square);
+                            piece.Add_cache(square);
+                        }
                     }
                 }
             }
@@ -370,7 +409,7 @@ public class Board : MonoBehaviour
     {
         var pieces = this.pieces.Get_All_in_game();
 
-        /*
+        
         pieces[1].Revive(this.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_7));//WP
         pieces[1].GetComponent<APawn>().moved = true;//WP
 
@@ -379,7 +418,7 @@ public class Board : MonoBehaviour
 
         pieces[15].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_8));//WKI
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_6));//BKI
-        */
+        
 
         /*
         pieces[14].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_2));
@@ -389,7 +428,7 @@ public class Board : MonoBehaviour
         */
 
 
-        
+        /*
         pieces[0].Revive(this.squares.Get_square_in_game (ASquare.ID_A, ASquare.ID_2));
         pieces[1].Revive(this.squares.Get_square_in_game (ASquare.ID_B, ASquare.ID_2));
         pieces[2].Revive(this.squares.Get_square_in_game (ASquare.ID_C, ASquare.ID_2));
@@ -423,6 +462,7 @@ public class Board : MonoBehaviour
         pieces[29].Revive(this.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_8));
         pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_8));
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_8));       
+        */
     }
 
     public void Default_values_pieces()

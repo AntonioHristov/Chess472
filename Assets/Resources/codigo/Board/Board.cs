@@ -5,9 +5,13 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
+    public Game game { get; set; }
     public Squares squares {get; set;}
     public Pieces pieces {get; set;}
-    public Game game { get; set; }
+    public List<AKing> kings_get_a_check { get; set; }
+
+
+
 
     /// <summary>
     /// Rotate or not depending on the turn of the game
@@ -226,7 +230,7 @@ public class Board : MonoBehaviour
                     */
                     if (square.piece && square.piece.GetComponent<AKing>() && square.piece.is_white != piece.is_white)
                     {
-                        this.game.kings_get_a_check.Add(square.piece.GetComponent<AKing>());
+                        this.kings_get_a_check.Add(square.piece.GetComponent<AKing>());
                         //Debug.Log("King " + this.game.kings_get_a_check + " attacked by " + piece);
                     }
                 }
@@ -237,7 +241,7 @@ public class Board : MonoBehaviour
     public void Update_squares_attacked_in_game()
     {
         this.squares.Set_no_attacked_in_game();
-        this.game.kings_get_a_check = new List<AKing>();
+        this.kings_get_a_check = new List<AKing>();
         this.Update_squares_attacked(this.pieces.Get_All_in_game());
     }
 
@@ -313,7 +317,7 @@ public class Board : MonoBehaviour
                 {
                     foreach (GameObject move in posible_moves)
                     {
-                        if (!move.GetComponent<Game>().Theres_a_check())
+                        if (!move.GetComponent<Game>().Theres_a_check_to_color(piece.is_white))
                         {
                             list = this.Add_to_list_if_not_null(list, square);
                             piece.Add_cache(square);
@@ -409,7 +413,7 @@ public class Board : MonoBehaviour
     {
         var pieces = this.pieces.Get_All_in_game();
 
-        
+        /*
         pieces[1].Revive(this.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_7));//WP
         pieces[1].GetComponent<APawn>().moved = true;//WP
 
@@ -418,14 +422,14 @@ public class Board : MonoBehaviour
 
         pieces[15].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_8));//WKI
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_6));//BKI
-        
+        */
 
-        /*
+        
         pieces[14].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_2));
         pieces[15].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_3));
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_G, ASquare.ID_1));
         pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_2));
-        */
+        
 
 
         /*
@@ -476,13 +480,17 @@ public class Board : MonoBehaviour
         pieces = this.GetComponentInChildren<Pieces>();
         game = this.GetComponentInParent<Game>();
 
+
     }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        if(!this.game.is_clone)
+        {
+            this.kings_get_a_check = new List<AKing>();
+        }
     }
 
     // Update is called once per frame

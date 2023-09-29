@@ -85,6 +85,7 @@ public class Game : MonoBehaviour
         is_finished = true;
         this.is_clone = false;
         this.depth_clone = Game.DEPTH_CLONE_DEFAULT;
+        // FIXME: CREATE A NEW METHOD TO BOARD (Default_values) AND USE THERE THESE board METHODS
         board.pieces.Set_default_values_in_game();
         board.squares.Set_default_values_in_game();
         board.Default_pieces_set_when_die();

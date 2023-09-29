@@ -99,7 +99,7 @@ public abstract class APiece : MonoBehaviour
         return this.cache_posible_moves;
     }
 
-
+    // FIXME: MAYBE CHANGE THE NAME OF THIS AND Set_cache_empty METHOD...
     /// <summary>
     /// Because we want 0 squares in cache and empty is not the same
     /// </summary>

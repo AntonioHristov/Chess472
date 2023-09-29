@@ -5,17 +5,30 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
+    /// <summary>
+    /// THE GAME WHICH HAS THIS BOARD.
+    /// </summary>
     public Game game { get; set; }
+    /// <summary>
+    /// THE SQUARES OF THIS BOARD.
+    /// </summary>
     public Squares squares {get; set;}
+    /// <summary>
+    /// THE PIECES OF THIS BOARD.
+    /// </summary>
     public Pieces pieces {get; set;}
+    // FIXME: MAYBE WE CAN IMPROVE THINGS IN kings_get_a_check, LIKE THIS Start METHOD AND: CHECK kings_get_a_check IS NOT NULL AND ITS NOT EMPTY...
+    /// <summary>
+    /// A LIST WITH KING PIECES IN THIS BOARD WHICH GET A CHECK/ATTACK IN THE LAST TURN.
+    /// </summary>
     public List<AKing> kings_get_a_check { get; set; }
 
 
 
 
     /// <summary>
-    /// Rotate or not depending on the turn of the game
-    /// This method rotate the board and all pieces in game
+    /// <para>ROTATE THIS BOARD OR NOT DEPENDING ON THE TURN OF THE GAME</para>
+    /// <para>THIS METHOD ROTATE THE BOARD AND ALL OWN PIECES</para>
     /// </summary>
     public void Rotate()
     {
@@ -24,8 +37,8 @@ public class Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Rotation by default
-    /// This method rotate the board and all pieces in game
+    /// <para>ROTATION BY DEFAULT</para>
+    /// <para>THIS METHOD ROTATE THE BOARD AND ALL OWN PIECES</para>
     /// </summary>
     public void Rotate_default()
     {
@@ -33,18 +46,23 @@ public class Board : MonoBehaviour
         this.pieces.Rotate_in_game_default();      
     }
 
-
+    /// <summary>
+    /// <para>MOVE A PIECE TO A SQUARE</para>
+    /// <para>PREVIOUS SQUARE OF THE PIECE WILL BE EMPTY AND IF THERES A PIECE IN THE NEW SQUARE, THAT PIECE WILL BE DIE</para>
+    /// </summary>
+    /// <param name="piece"></param>
+    /// <param name="square"></param>
     public void Piece_to_square(APiece piece = null, ASquare square = null)
     {
         if (piece && square)
         {
-            // If there's an enemy piece in the new square, the enemy piece die
+            // IF THERE'S AN ENEMY PIECE IN THE NEW SQUARE, THE ENEMY PIECE DIE
             if (square.piece && square.piece.is_white != piece.is_white)
             {
                 square.piece.Die();
             }
 
-            // Previous square is now empty
+            // PREVIOUS SQUARE IS NOW EMPTY
             if (piece.square)
             {
                 piece.square.piece = null;
@@ -56,8 +74,10 @@ public class Board : MonoBehaviour
         }
     }
 
+    // FIXME: REMOVE by_user WHEN CREATE THE OBJECT CLON_GAME, OR THINK ABOUT THAT
     /// <summary>
-    /// Make a move
+    /// <para>THE DIFFERENCE WITH Piece_to_square IS THERES A MOVE CASTLE AND EN PASSANT WHICH ARE DIFFERENT</para>
+    /// <para>by_user IS BECAUSE A CLON GAME CAN MAKE A MOVE AND IN THAT CASE IF ITS A PROMOTION WE DON'T WANT TO OPEN THE PROMOTION BOX</para>
     /// </summary>
     /// <param name="piece"></param>
     /// <param name="square_destination"></param>
@@ -119,6 +139,15 @@ public class Board : MonoBehaviour
         return this.game.gameObject;
     }
 
+    /// <summary>
+    /// SAME TO Make_a_move BUT IN A CLON GAME (clone_gameobject)
+    /// IF THERE'S NO clone_gameobject, THIS METHOD CREATES A NEW CLONE GAME, MAKE THE MOVE AND
+    /// RETURN THE CLONE GAME
+    /// </summary>
+    /// <param name="piece"></param>
+    /// <param name="square"></param>
+    /// <param name="clone_gameobject"></param>
+    /// <returns></returns>
     private GameObject Make_a_move_in_a_cloned_game(APiece piece, ASquare square, GameObject clone_gameobject = null)
     {
         if (!clone_gameobject)
@@ -141,6 +170,14 @@ public class Board : MonoBehaviour
         return clone_gameobject;
     }
 
+    /// <summary>
+    /// THIS IS ONLY BECAUSE IN A CLON GAME THE SAME MOVE CAN BE MULTIPLE MOVES IN THE PAWN'S PROMOTION
+    /// AND WE WANT TO GET ALL OF THEM IN A CLON GAME ONLY IF ITS A PROMOTION, 
+    /// <para>IF NOT IT CALLS Make_a_move_in_a_cloned_game METHOD</para>
+    /// </summary>
+    /// <param name="piece"></param>
+    /// <param name="square_destination"></param>
+    /// <returns></returns>
     public GameObject[] Make_posible_moves_in_a_clon_game(APiece piece, ASquare square_destination)
     {
         var result = new List<GameObject>();
@@ -210,6 +247,11 @@ public class Board : MonoBehaviour
         return result.ToArray();
     }
 
+    /// <summary>
+    /// THIS METHOD UPDATE SQUARES ATTACKED BY PIECES PASSED BY PARAMETER
+    /// <para>AND ADD TO kings_get_a_check IF ITS THE CASE</para>
+    /// </summary>
+    /// <param name="pieces"></param>
     public void Update_squares_attacked(APiece[] pieces)
     {
         foreach (APiece piece in pieces)
@@ -238,6 +280,9 @@ public class Board : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// UPDATE ALL SQUARES ATTACKED BY ALL PIECES IN THIS BOARD
+    /// </summary>
     public void Update_squares_attacked_in_game()
     {
         this.squares.Set_no_attacked_in_game();
@@ -245,6 +290,11 @@ public class Board : MonoBehaviour
         this.Update_squares_attacked(this.pieces.Get_All_in_game());
     }
 
+    /// <summary>
+    /// RETURN TRUE IF THERE'S A PIECE BY PARAMETER IN THE SAME TURN AND THAT PIECE HAS A/SOME POSIBLE MOVES
+    /// </summary>
+    /// <param name="pieces"></param>
+    /// <returns></returns>
     public bool Check_cant_move(APiece[] pieces)
     {
         foreach (APiece piece in pieces)
@@ -257,35 +307,18 @@ public class Board : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// RETURN TRUE IF THERE'S A PIECE IN THIS BOARD IN THE SAME TURN AND THAT PIECE HAS A/SOME POSIBLE MOVES
+    /// </summary>
+    /// <returns></returns>
     public bool Check_cant_move_in_game()
     {
         return this.Check_cant_move(this.pieces.Get_All_in_game());
     }
 
-    public bool Check_is_stalemate(APiece[] pieces)
-    {
-        return this.Check_cant_move(pieces) && !this.game.Theres_a_check();
-    }
-
-    public bool Check_is_stalemate_in_game()
-    {
-        return this.Check_is_stalemate(this.pieces.Get_All_in_game());
-    }
-
-    public bool Check_is_checkmate(APiece[] pieces)
-    {
-        return this.Check_cant_move(pieces) && this.game.Theres_a_check();
-    }
-
-    public bool Check_is_checkmate_in_game()
-    {
-        return this.Check_is_checkmate(this.pieces.Get_All_in_game());
-    }
-
-
-
     /// <summary>
-    /// Can move or capture
+    /// IF A PIECE CAN MOVE INTO A SQUARE, RETURN TRUE
+    /// <para>(A PIECE CAN'T MOVE INTO A SQUARE WITH A PIECE WITH THE SAME COLOUR)</para>
     /// </summary>
     /// <param name="piece"></param>
     /// <param name="square"></param>
@@ -296,9 +329,7 @@ public class Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Warning, by general pieces like knight, bishop, king, ... 
-    /// NOT FOR PAWNS, because in that case is not exactly the same thing
-    /// (can move and not can capture, etc).
+    /// ADD A SQUARE INTO A LIST IF CAN MOVE A PIECE INTO A SQUARE
     /// </summary>
     /// <param name="list"></param>
     /// <param name="piece"></param>
@@ -310,6 +341,7 @@ public class Board : MonoBehaviour
         {
             if (this.game.Theres_depth_check() && this.game.Theres_a_check())
             {
+                // Cache list is empty
                 piece.Add_cache();
                 var posible_moves = this.Make_posible_moves_in_a_clon_game(piece, square);
 
@@ -335,9 +367,7 @@ public class Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Warning, by general pieces like knight, bishop, king, ... 
-    /// NOT FOR PAWNS, because in that case is not exactly the same thing
-    /// (can move and not can capture, etc).
+    /// ADD SQUARES FROM A LIST OF SQUARES INTO A LIST IF CAN MOVE A PIECE INTO THE SQUARES
     /// </summary>
     /// <param name="list"></param>
     /// <param name="piece"></param>
@@ -360,7 +390,9 @@ public class Board : MonoBehaviour
     #region Large moves
 
     /// <summary>
-    /// With large moves like bishops, rooks, queens
+    /// ONLY WITH LARGE MOVES PIECES LIKE BISHOPS, ROOKS, QUEENS
+    /// <para>PREVIOUSLY ALL SQUARES MUST BE IN THE SAME DIRECTION (DIAGONAL, VERTICAL OR HORIZONTAL)</para>
+    /// <para>THIS METHOD ADD INTO A LIST THESE SQUARES UNTIL THERE'S A SQUARE WITH A PIECE (NOT EMPTY)</para>
     /// </summary>
     /// <param name="list"></param>
     /// <param name="piece"></param>
@@ -384,6 +416,13 @@ public class Board : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// IF SOMETHING IT'S NULL, RETURN NULL.
+    /// <para>IF NOT, ADD THE SQUARE INTO THE LIST AND RETURN THE LIST.</para>
+    /// </summary>
+    /// <param name="list"></param>
+    /// <param name="square"></param>
+    /// <returns></returns>
     public List<ASquare> Add_to_list_if_not_null(List<ASquare> list, ASquare square)
     {
         if (list != null && square != null)
@@ -393,7 +432,9 @@ public class Board : MonoBehaviour
         return list;
     }
 
-
+    /// <summary>
+    /// THIS METHOD ASIGN WHEN DIE SQUARES TO ALL PIECES
+    /// </summary>
     public void Default_pieces_set_when_die()
     {
         var all_pieces = this.pieces.Get_All_in_game();
@@ -409,6 +450,9 @@ public class Board : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// THIS METHOD ASIGN ALL PIECES INTO DEFAULT SQUARES FROM A NORMAL FIRST POSITION IN A NORMAL CHESS GAME
+    /// </summary>
     public void Default_pieces_to_squares()
     {
         var pieces = this.pieces.Get_All_in_game();
@@ -424,15 +468,15 @@ public class Board : MonoBehaviour
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_6));//BKI
         */
 
-        
+        /*
         pieces[14].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_2));
         pieces[15].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_3));
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_G, ASquare.ID_1));
         pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_2));
+        */
+
+
         
-
-
-        /*
         pieces[0].Revive(this.squares.Get_square_in_game (ASquare.ID_A, ASquare.ID_2));
         pieces[1].Revive(this.squares.Get_square_in_game (ASquare.ID_B, ASquare.ID_2));
         pieces[2].Revive(this.squares.Get_square_in_game (ASquare.ID_C, ASquare.ID_2));
@@ -466,36 +510,30 @@ public class Board : MonoBehaviour
         pieces[29].Revive(this.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_8));
         pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_8));
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_8));       
-        */
+        
     }
 
-    public void Default_values_pieces()
-    {
-        this.pieces.Set_default_values_in_game();
-    }
-
+    /// <summary>
+    /// Awake IS CALLED ONLY ONCE DURING THE LIFETIME OF THE SCRIPT INSTANCE
+    /// </summary>
     void Awake()
     {
         squares = this.GetComponentInChildren<Squares>();
         pieces = this.GetComponentInChildren<Pieces>();
         game = this.GetComponentInParent<Game>();
-
-
     }
 
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Start IS CALLED BEFORE THE FIRST FRAME UPDATE
+    /// <para>IF ITS NOT A CLONE GAME, INITIALIZATE A NEW EMPTY LIST kings_get_a_check</para>
+    /// </summary>
     void Start()
     {
+        // Maybe we can remove this, but make some tests first
         if(!this.game.is_clone)
         {
             this.kings_get_a_check = new List<AKing>();
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

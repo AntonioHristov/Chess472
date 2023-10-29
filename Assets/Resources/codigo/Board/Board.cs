@@ -433,7 +433,7 @@ public class Board : MonoBehaviour
     }
 
     /// <summary>
-    /// THIS METHOD ASIGN WHEN DIE SQUARES TO ALL PIECES
+    /// EACH PIECE HAS A SQUARE TO GO WHEN THE PIECE DIES, SO THIS METHOD ASIGN WHEN DIE SQUARES TO ALL PIECES
     /// </summary>
     public void Default_pieces_set_when_die()
     {
@@ -457,7 +457,7 @@ public class Board : MonoBehaviour
     {
         var pieces = this.pieces.Get_All_in_game();
 
-        /*
+        
         pieces[1].Revive(this.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_7));//WP
         pieces[1].GetComponent<APawn>().moved = true;//WP
 
@@ -466,7 +466,7 @@ public class Board : MonoBehaviour
 
         pieces[15].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_8));//WKI
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_H, ASquare.ID_6));//BKI
-        */
+        
 
         /*
         pieces[14].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_2));
@@ -476,7 +476,7 @@ public class Board : MonoBehaviour
         */
 
 
-        
+        /*
         pieces[0].Revive(this.squares.Get_square_in_game (ASquare.ID_A, ASquare.ID_2));
         pieces[1].Revive(this.squares.Get_square_in_game (ASquare.ID_B, ASquare.ID_2));
         pieces[2].Revive(this.squares.Get_square_in_game (ASquare.ID_C, ASquare.ID_2));
@@ -510,7 +510,7 @@ public class Board : MonoBehaviour
         pieces[29].Revive(this.squares.Get_square_in_game(ASquare.ID_F, ASquare.ID_8));
         pieces[30].Revive(this.squares.Get_square_in_game(ASquare.ID_D, ASquare.ID_8));
         pieces[31].Revive(this.squares.Get_square_in_game(ASquare.ID_E, ASquare.ID_8));       
-        
+        */
     }
 
     /// <summary>

@@ -24,7 +24,7 @@ public class Squares : MonoBehaviour
     public ASquare[] when_die { get; set; }
 
     /// <summary>
-    /// THE BOARD WHICH HAS THIS, THE PIECES, THE GAME
+    /// THE BOARD WHICH HAS THIS, THE PIECES, THE GAME, ETC
     /// </summary>
     public Board board { get; set; }
 
